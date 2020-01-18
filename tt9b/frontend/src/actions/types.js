@@ -7,3 +7,9 @@ export const ADD_ROUTINE = "ADD_ROUTINE";
 export const GET_SEGMENTS = "GET_SEGMENTS";
 export const DELETE_SEGMENT = "DELETE_SEGMENT";
 export const ADD_SEGMENT = "ADD_SEGMENT";
+
+//Error actions
+export const GET_ERRORS = "GET_ERRORS";
+
+// Message actions
+export const CREATE_MESSAGE = "CREATE_MESSAGE";
