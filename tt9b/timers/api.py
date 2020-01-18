@@ -5,11 +5,17 @@ from .serializers import RoutineSerializer, SegmentSerializer
 
 # TimeRoutine viewset
 class RoutineViewSet(viewsets.ModelViewSet):
-    queryset = TimeRoutine.objects.all()
     permission_classes = [
-        permissions.AllowAny
+        permissions.IsAuthenticated
     ]
     serializer_class = RoutineSerializer
+
+    def get_queryset(self):
+        return self.request.user.routines.all()
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
+
 
 # TimeSegment viewset
 class SegmentViewSet(viewsets.ModelViewSet):

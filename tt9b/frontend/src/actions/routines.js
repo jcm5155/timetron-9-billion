@@ -1,6 +1,6 @@
 import axios from "axios";
-import { GET_ROUTINES, DELETE_ROUTINE, ADD_ROUTINE, GET_ERRORS } from "./types";
-import { createMessage } from "./messages";
+import { GET_ROUTINES, DELETE_ROUTINE, ADD_ROUTINE } from "./types";
+import { createMessage, returnErrors } from "./messages";
 
 // GET ROUTINES
 export const getRoutines = () => dispatch => {
@@ -12,16 +12,9 @@ export const getRoutines = () => dispatch => {
         payload: response.data
       });
     })
-    .catch(error => {
-      const errors = {
-        msg: error.response.data,
-        status: error.response.status
-      };
-      dispatch({
-        type: GET_ERRORS,
-        payload: errors
-      });
-    });
+    .catch(error =>
+      dispatch(returnErrors(error.response.data, error.response.status))
+    );
 };
 
 // DELETE ROUTINE
@@ -35,16 +28,9 @@ export const deleteRoutine = id => dispatch => {
         payload: id
       });
     })
-    .catch(error => {
-      const errors = {
-        msg: error.response.data,
-        status: error.response.status
-      };
-      dispatch({
-        type: GET_ERRORS,
-        payload: errors
-      });
-    });
+    .catch(error =>
+      dispatch(returnErrors(error.response.data, error.response.status))
+    );
 };
 
 // ADD ROUTINE
@@ -58,14 +44,7 @@ export const addRoutine = routine => dispatch => {
         payload: response.data
       });
     })
-    .catch(error => {
-      const errors = {
-        msg: error.response.data,
-        status: error.response.status
-      };
-      dispatch({
-        type: GET_ERRORS,
-        payload: errors
-      });
-    });
+    .catch(error =>
+      dispatch(returnErrors(error.response.data, error.response.status))
+    );
 };

@@ -1,6 +1,6 @@
 import axios from "axios";
-import { GET_SEGMENTS, DELETE_SEGMENT, ADD_SEGMENT, GET_ERRORS } from "./types";
-import { createMessage } from "./messages";
+import { GET_SEGMENTS, DELETE_SEGMENT, ADD_SEGMENT } from "./types";
+import { createMessage, returnErrors } from "./messages";
 
 // GET SEGMENTS
 export const getSegments = () => dispatch => {
@@ -12,16 +12,9 @@ export const getSegments = () => dispatch => {
         payload: response.data
       });
     })
-    .catch(error => {
-      const errors = {
-        msg: error.response.data,
-        status: error.response.status
-      };
-      dispatch({
-        type: GET_ERRORS,
-        payload: errors
-      });
-    });
+    .catch(error =>
+      dispatch(returnErrors(error.response.data, error.response.status))
+    );
 };
 
 // DELETE SEGMENT
@@ -35,16 +28,9 @@ export const deleteSegment = id => dispatch => {
         payload: id
       });
     })
-    .catch(error => {
-      const errors = {
-        msg: error.response.data,
-        status: error.response.status
-      };
-      dispatch({
-        type: GET_ERRORS,
-        payload: errors
-      });
-    });
+    .catch(error =>
+      dispatch(returnErrors(error.response.data, error.response.status))
+    );
 };
 
 // ADD SEGMENT
@@ -58,14 +44,7 @@ export const addSegment = segment => dispatch => {
         payload: response.data
       });
     })
-    .catch(error => {
-      const errors = {
-        msg: error.response.data,
-        status: error.response.status
-      };
-      dispatch({
-        type: GET_ERRORS,
-        payload: errors
-      });
-    });
+    .catch(error =>
+      dispatch(returnErrors(error.response.data, error.response.status))
+    );
 };
