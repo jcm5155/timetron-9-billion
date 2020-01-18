@@ -1,11 +1,12 @@
 import axios from "axios";
 import { GET_ROUTINES, DELETE_ROUTINE, ADD_ROUTINE } from "./types";
 import { createMessage, returnErrors } from "./messages";
+import { tokenConfig } from "./auth";
 
 // GET ROUTINES
-export const getRoutines = () => dispatch => {
+export const getRoutines = () => (dispatch, getState) => {
   axios
-    .get("/api/routines/")
+    .get("/api/routines/", tokenConfig(getState))
     .then(response => {
       dispatch({
         type: GET_ROUTINES,
@@ -18,9 +19,9 @@ export const getRoutines = () => dispatch => {
 };
 
 // DELETE ROUTINE
-export const deleteRoutine = id => dispatch => {
+export const deleteRoutine = id => (dispatch, getState) => {
   axios
-    .delete(`/api/routines/${id}/`)
+    .delete(`/api/routines/${id}/`, tokenConfig(getState))
     .then(response => {
       dispatch(createMessage({ routineDelete: "Routine Deleted" }));
       dispatch({
@@ -34,9 +35,9 @@ export const deleteRoutine = id => dispatch => {
 };
 
 // ADD ROUTINE
-export const addRoutine = routine => dispatch => {
+export const addRoutine = routine => (dispatch, getState) => {
   axios
-    .post("/api/routines/", routine)
+    .post("/api/routines/", routine, tokenConfig(getState))
     .then(response => {
       dispatch(createMessage({ routineAdd: "Routine Added" }));
       dispatch({

@@ -1,11 +1,12 @@
 import axios from "axios";
 import { GET_SEGMENTS, DELETE_SEGMENT, ADD_SEGMENT } from "./types";
 import { createMessage, returnErrors } from "./messages";
+import { tokenConfig } from "./auth";
 
 // GET SEGMENTS
-export const getSegments = () => dispatch => {
+export const getSegments = () => (dispatch, getState) => {
   axios
-    .get("/api/segments/")
+    .get("/api/segments/", tokenConfig(getState))
     .then(response => {
       dispatch({
         type: GET_SEGMENTS,
@@ -18,9 +19,9 @@ export const getSegments = () => dispatch => {
 };
 
 // DELETE SEGMENT
-export const deleteSegment = id => dispatch => {
+export const deleteSegment = id => (dispatch, getState) => {
   axios
-    .delete(`/api/segments/${id}/`)
+    .delete(`/api/segments/${id}/`, tokenConfig(getState))
     .then(response => {
       dispatch(createMessage({ segmentDelete: "Segment Deleted" }));
       dispatch({
@@ -34,9 +35,9 @@ export const deleteSegment = id => dispatch => {
 };
 
 // ADD SEGMENT
-export const addSegment = segment => dispatch => {
+export const addSegment = segment => (dispatch, getState) => {
   axios
-    .post("/api/segments/", segment)
+    .post("/api/segments/", segment, tokenConfig(getState))
     .then(response => {
       dispatch(createMessage({ segmentAdded: "Segment Added" }));
       dispatch({

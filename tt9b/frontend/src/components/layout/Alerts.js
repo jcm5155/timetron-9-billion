@@ -22,6 +22,7 @@ export class Alerts extends Component {
       if (message.routineAdd) alert.success(message.routineAdd);
       if (message.segmentDelete) alert.success(message.segmentDelete);
       if (message.segmentAdd) alert.success(message.segmentAdd);
+      if (message.passwordNotMatch) alert.error(message.passwordNotMatch);
     }
   }
   render() {

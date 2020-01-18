@@ -16,8 +16,12 @@ export class Form extends Component {
 
   onSubmit = e => {
     e.preventDefault();
+    const { id } = this.props.auth.user;
     const { name } = this.state;
-    const routine = { name };
+    const routine = {
+      name: name,
+      author: id
+    };
     this.props.addRoutine(routine);
     this.setState({
       name: ""
@@ -51,4 +55,8 @@ export class Form extends Component {
   }
 }
 
-export default connect(null, { addRoutine })(Form);
+const mapStateToProps = state => ({
+  auth: state.auth
+});
+
+export default connect(mapStateToProps, { addRoutine })(Form);
