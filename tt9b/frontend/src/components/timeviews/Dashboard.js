@@ -1,11 +1,13 @@
 import React, { Fragment } from "react";
+import Segments from "./Segments";
+import TimeDisplay from "./TimeDisplay";
 import Form from "./Form";
-import Routines from "./Routines";
 
 export default function Dashboard() {
   return (
     <Fragment>
-      <Routines />
+      <TimeDisplay />
+      <Segments />
       <Form />
     </Fragment>
   );

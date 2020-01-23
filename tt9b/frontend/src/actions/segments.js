@@ -4,18 +4,16 @@ import { createMessage, returnErrors } from "./messages";
 import { tokenConfig } from "./auth";
 
 // GET SEGMENTS
-export const getSegments = () => (dispatch, getState) => {
+export const getSegments = id => (dispatch, getState) => {
   axios
-    .get("/api/segments/", tokenConfig(getState))
+    .get(`/api/segments/?id=${id}`, tokenConfig(getState))
     .then(response => {
       dispatch({
         type: GET_SEGMENTS,
         payload: response.data
       });
     })
-    .catch(error =>
-      dispatch(returnErrors(error.response.data, error.response.status))
-    );
+    .catch(error => dispatch(returnErrors(error.response.data, error.response.status)));
 };
 
 // DELETE SEGMENT
@@ -29,9 +27,7 @@ export const deleteSegment = id => (dispatch, getState) => {
         payload: id
       });
     })
-    .catch(error =>
-      dispatch(returnErrors(error.response.data, error.response.status))
-    );
+    .catch(error => dispatch(returnErrors(error.response.data, error.response.status)));
 };
 
 // ADD SEGMENT
@@ -45,7 +41,5 @@ export const addSegment = segment => (dispatch, getState) => {
         payload: response.data
       });
     })
-    .catch(error =>
-      dispatch(returnErrors(error.response.data, error.response.status))
-    );
+    .catch(error => dispatch(returnErrors(error.response.data, error.response.status)));
 };

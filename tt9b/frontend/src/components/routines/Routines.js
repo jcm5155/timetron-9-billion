@@ -1,13 +1,16 @@
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { getRoutines, deleteRoutine } from "../../actions/routines";
+import { getRoutines, deleteRoutine, setCurrentRoutine } from "../../actions/routines";
+import { getSegments } from "../../actions/segments";
 
 export class Routines extends Component {
   static propTypes = {
     routines: PropTypes.array.isRequired,
     getRoutines: PropTypes.func.isRequired,
-    deleteRoutine: PropTypes.func.isRequired
+    deleteRoutine: PropTypes.func.isRequired,
+    setCurrentRoutine: PropTypes.func.isRequired,
+    getSegments: PropTypes.func.isRequired
   };
 
   componentDidMount() {
@@ -37,11 +40,21 @@ export class Routines extends Component {
                 <td>Total Time (NYI)</td>
                 <td>{routine.plays}</td>
                 <td>
-                  <button className="btn btn-secondary btn-sm">Edit</button>
+                  <button
+                    onClick={() => {
+                      this.props.setCurrentRoutine(routine.id);
+                      this.props.getSegments(routine.id);
+                    }}
+                    className="btn btn-secondary btn-sm"
+                  >
+                    Select
+                  </button>
                 </td>
                 <td>
                   <button
-                    onClick={this.props.deleteRoutine.bind(this, routine.id)}
+                    onClick={() => {
+                      this.props.deleteRoutine(routine.id);
+                    }}
                     className="btn btn-danger btn-sm"
                   >
                     Delete
@@ -60,6 +73,9 @@ const mapStateToProps = state => ({
   routines: state.routines.routines
 });
 
-export default connect(mapStateToProps, { getRoutines, deleteRoutine })(
-  Routines
-);
+export default connect(mapStateToProps, {
+  getRoutines,
+  deleteRoutine,
+  setCurrentRoutine,
+  getSegments
+})(Routines);

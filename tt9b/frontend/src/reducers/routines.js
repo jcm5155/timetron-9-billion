@@ -1,7 +1,13 @@
-import { GET_ROUTINES, DELETE_ROUTINE, ADD_ROUTINE } from "../actions/types.js";
+import {
+  GET_ROUTINES,
+  DELETE_ROUTINE,
+  ADD_ROUTINE,
+  SET_CURRENT_ROUTINE
+} from "../actions/types.js";
 
 const initialState = {
-  routines: []
+  routines: [],
+  current_routine: null
 };
 
 export default function(state = initialState, action) {
@@ -22,6 +28,11 @@ export default function(state = initialState, action) {
       return {
         ...state,
         routines: [...state.routines, action.payload]
+      };
+    case SET_CURRENT_ROUTINE:
+      return {
+        ...state,
+        current_routine: action.payload
       };
     default:
       return state;

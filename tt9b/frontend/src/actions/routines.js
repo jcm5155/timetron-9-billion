@@ -1,5 +1,5 @@
 import axios from "axios";
-import { GET_ROUTINES, DELETE_ROUTINE, ADD_ROUTINE } from "./types";
+import { GET_ROUTINES, DELETE_ROUTINE, ADD_ROUTINE, SET_CURRENT_ROUTINE } from "./types";
 import { createMessage, returnErrors } from "./messages";
 import { tokenConfig } from "./auth";
 
@@ -13,9 +13,7 @@ export const getRoutines = () => (dispatch, getState) => {
         payload: response.data
       });
     })
-    .catch(error =>
-      dispatch(returnErrors(error.response.data, error.response.status))
-    );
+    .catch(error => dispatch(returnErrors(error.response.data, error.response.status)));
 };
 
 // DELETE ROUTINE
@@ -29,9 +27,7 @@ export const deleteRoutine = id => (dispatch, getState) => {
         payload: id
       });
     })
-    .catch(error =>
-      dispatch(returnErrors(error.response.data, error.response.status))
-    );
+    .catch(error => dispatch(returnErrors(error.response.data, error.response.status)));
 };
 
 // ADD ROUTINE
@@ -45,7 +41,19 @@ export const addRoutine = routine => (dispatch, getState) => {
         payload: response.data
       });
     })
-    .catch(error =>
-      dispatch(returnErrors(error.response.data, error.response.status))
-    );
+    .catch(error => dispatch(returnErrors(error.response.data, error.response.status)));
+};
+
+// SET CURRENT ROUTINE
+
+export const setCurrentRoutine = id => (dispatch, getState) => {
+  axios
+    .get(`/api/routines/${id}`, tokenConfig(getState))
+    .then(response => {
+      dispatch({
+        type: SET_CURRENT_ROUTINE,
+        payload: response.data
+      });
+    })
+    .catch(error => dispatch(returnErrors(error.response.data, error.response.status)));
 };
