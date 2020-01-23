@@ -10,6 +10,7 @@ export class TimeDisplay extends Component {
     this.startStopClick = this.startStopClick.bind(this);
     this.startTimer = this.startTimer.bind(this);
     this.stopTimer = this.stopTimer.bind(this);
+    this.resetTimer = this.resetTimer.bind(this);
     this.displayTime = this.displayTime.bind(this);
     this.setStateAsync = this.setStateAsync.bind(this);
     this.timerComplete = this.timerComplete.bind(this);
@@ -19,17 +20,15 @@ export class TimeDisplay extends Component {
       timerRunning: false,
       timerIndex: 0,
       timerTarget: null,
-      timerLeft: this.props.segments[0].duration,
-      timerInstance: null
+      timerInstance: null,
+      timerLeft: null
     };
   }
 
   componentDidMount() {
-    this.displaySegment.innerHTML = this.props.segments[0].name;
-    this.displayHours.innerHTML = "00";
-    this.displayMinutes.innerHTML = "00";
-    this.displaySeconds.innerHTML = this.state.timerLeft;
-    this.displayMilliseconds.innerHTML = "00";
+    if (this.props.segments.length > 0) {
+      this.resetClick();
+    }
   }
 
   componentWillUnmount() {
@@ -54,18 +53,38 @@ export class TimeDisplay extends Component {
     if (this.state.timerInstance) {
       clearInterval(this.state.timerInstance);
     }
+    if (this.props.segments.length > 0) {
+      this.resetTimer();
+    }
+  }
+
+  async resetTimer() {
+    let firstSeg = this.props.segments[0];
     await this.setStateAsync({
       timerRunning: false,
       timerIndex: 0,
       timerTarget: null,
-      timerLeft: this.props.segments[0].duration,
-      timerInstance: null
+      timerInstance: null,
+      timerLeft: firstSeg.duration
     });
-    this.displaySegment.innerHTML = this.props.segments[0].name;
-    this.displayHours.innerHTML = "00";
-    this.displayMinutes.innerHTML = "00";
-    this.displaySeconds.innerHTML = this.state.timerLeft;
-    this.displayMilliseconds.innerHTML = "00";
+    let tempTime = moment.duration(firstSeg.duration, "s");
+    this.displaySegment.innerHTML = firstSeg.name;
+    this.displayMilliseconds.innerHTML = tempTime
+      .get("milliseconds")
+      .toString()
+      .padStart(3, "0");
+    this.displaySeconds.innerHTML = tempTime
+      .get("seconds")
+      .toString()
+      .padStart(2, "0");
+    this.displayMinutes.innerHTML = tempTime
+      .get("minutes")
+      .toString()
+      .padStart(2, "0");
+    this.displayHours.innerHTML = tempTime
+      .get("hours")
+      .toString()
+      .padStart(2, "0");
   }
 
   async startTimer() {
@@ -148,7 +167,9 @@ export class TimeDisplay extends Component {
             ref={ds => {
               this.displaySegment = ds;
             }}
-          ></h3>
+          >
+            Add a segment to your routine!
+          </h3>
         </div>
 
         <div className="d-flex justify-content-sm-center">
@@ -159,7 +180,9 @@ export class TimeDisplay extends Component {
                 ref={dh => {
                   this.displayHours = dh;
                 }}
-              ></h1>
+              >
+                00
+              </h1>
             </div>
             <div className="p-2">
               <h1 className="display-1">:</h1>
@@ -170,7 +193,9 @@ export class TimeDisplay extends Component {
                 ref={dm => {
                   this.displayMinutes = dm;
                 }}
-              ></h1>
+              >
+                00
+              </h1>
             </div>
             <div className="p-2">
               <h1 className="display-1">:</h1>
@@ -181,7 +206,9 @@ export class TimeDisplay extends Component {
                 ref={ds => {
                   this.displaySeconds = ds;
                 }}
-              ></h1>
+              >
+                00
+              </h1>
             </div>
             <div className="p-2">
               <h1 className="display-1">:</h1>
@@ -192,7 +219,9 @@ export class TimeDisplay extends Component {
                 ref={dms => {
                   this.displayMilliseconds = dms;
                 }}
-              ></h1>
+              >
+                000
+              </h1>
             </div>
           </div>
         </div>

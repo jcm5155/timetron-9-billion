@@ -4,16 +4,16 @@ import { createMessage, returnErrors } from "./messages";
 import { tokenConfig } from "./auth";
 
 // GET SEGMENTS
-export const getSegments = id => (dispatch, getState) => {
-  axios
-    .get(`/api/segments/?id=${id}`, tokenConfig(getState))
-    .then(response => {
-      dispatch({
-        type: GET_SEGMENTS,
-        payload: response.data
-      });
-    })
-    .catch(error => dispatch(returnErrors(error.response.data, error.response.status)));
+export const getSegments = id => async (dispatch, getState) => {
+  try {
+    const response = await axios.get(`/api/segments/?id=${id}`, tokenConfig(getState));
+    dispatch({
+      type: GET_SEGMENTS,
+      payload: response.data
+    });
+  } catch (error) {
+    return dispatch(returnErrors(error.response.data, error.response.status));
+  }
 };
 
 // DELETE SEGMENT

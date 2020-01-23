@@ -16,6 +16,7 @@ import PrivateRoute from "./common/PrivateRoute";
 import Header from "./layout/Header";
 import RoutinesDashboard from "./routines/Dashboard";
 import TimeViewsDashboard from "./timeviews/Dashboard";
+import Stopwatch from "./timeviews/Stopwatch";
 
 // Alert Options
 const alertOptions = {
@@ -39,7 +40,8 @@ class App extends Component {
                 <PrivateRoute exact path="/" component={RoutinesDashboard} />
                 <Route exact path="/register" component={Register} />
                 <Route exact path="/login" component={Login} />
-                <Route exact path="/test" component={TimeViewsDashboard} />
+                <Route exact path="/stopwatch" component={Stopwatch} />
+                <PrivateRoute exact path="/routine" component={TimeViewsDashboard} />
               </div>
             </Fragment>
           </Router>

@@ -2,16 +2,13 @@ import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { getSegments, deleteSegment, addSegment } from "../../actions/segments";
+import { formatTime } from "../common/SharedFunctions";
 
 export class RoutineTimer extends Component {
   static propTypes = {
     current_routine: PropTypes.object.isRequired,
     segments: PropTypes.array.isRequired
   };
-
-  componentDidMount() {
-    this.props.getSegments(this.props.current_routine.id);
-  }
 
   render() {
     return (
@@ -32,7 +29,7 @@ export class RoutineTimer extends Component {
             {this.props.segments.map(segment => (
               <tr key={segment.id}>
                 <td>{segment.name}</td>
-                <td>{segment.duration}</td>
+                <td>{formatTime(segment.duration)}</td>
                 <td>{segment.position}</td>
                 <td>
                   <button

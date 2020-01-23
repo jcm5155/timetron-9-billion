@@ -3,8 +3,18 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { getRoutines, deleteRoutine, setCurrentRoutine } from "../../actions/routines";
 import { getSegments } from "../../actions/segments";
+import { Redirect } from "react-router-dom";
 
 export class Routines extends Component {
+  constructor(props) {
+    super(props);
+    this.onSelectClick = this.onSelectClick.bind(this);
+    this.setStateAsync = this.setStateAsync.bind(this);
+    this.state = {
+      redirect: false
+    };
+  }
+
   static propTypes = {
     routines: PropTypes.array.isRequired,
     getRoutines: PropTypes.func.isRequired,
@@ -17,10 +27,33 @@ export class Routines extends Component {
     this.props.getRoutines();
   }
 
+  componentWillUnmount() {
+    this.setState({
+      redirect: false
+    });
+  }
+
+  setStateAsync(state) {
+    return new Promise(resolve => {
+      this.setState(state, resolve);
+    });
+  }
+
+  async onSelectClick(id) {
+    await this.props.setCurrentRoutine(id);
+    await this.props.getSegments(id);
+    await this.setStateAsync({
+      redirect: true
+    });
+  }
+
   render() {
+    if (this.state.redirect == true) {
+      return <Redirect push to="/routine" />;
+    }
     return (
       <Fragment>
-        <h1>Routines</h1>
+        <h1 className="text-center">Routines</h1>
         <table className="table table-striped">
           <thead>
             <tr>
@@ -42,8 +75,10 @@ export class Routines extends Component {
                 <td>
                   <button
                     onClick={() => {
-                      this.props.setCurrentRoutine(routine.id);
-                      this.props.getSegments(routine.id);
+                      this.onSelectClick(routine.id);
+                    }}
+                    ref={bt => {
+                      this.selectButt = bt;
                     }}
                     className="btn btn-secondary btn-sm"
                   >

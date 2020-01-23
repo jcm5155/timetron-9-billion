@@ -46,14 +46,14 @@ export const addRoutine = routine => (dispatch, getState) => {
 
 // SET CURRENT ROUTINE
 
-export const setCurrentRoutine = id => (dispatch, getState) => {
-  axios
-    .get(`/api/routines/${id}`, tokenConfig(getState))
-    .then(response => {
-      dispatch({
-        type: SET_CURRENT_ROUTINE,
-        payload: response.data
-      });
-    })
-    .catch(error => dispatch(returnErrors(error.response.data, error.response.status)));
+export const setCurrentRoutine = id => async (dispatch, getState) => {
+  try {
+    const response = await axios.get(`/api/routines/${id}`, tokenConfig(getState));
+    dispatch({
+      type: SET_CURRENT_ROUTINE,
+      payload: response.data
+    });
+  } catch (error) {
+    return dispatch(returnErrors(error.response.data, error.response.status));
+  }
 };
