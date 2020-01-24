@@ -1,7 +1,9 @@
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
-import PropTypes from "prop-types";
 import moment from "moment";
+import Segments from "./Segments";
+import { formatTime, totalTime } from "../../utils/SharedFunctions";
+import PropTypes from "prop-types";
 
 export class TimeDisplay extends Component {
   constructor(props) {
@@ -21,14 +23,14 @@ export class TimeDisplay extends Component {
       timerIndex: 0,
       timerTarget: null,
       timerInstance: null,
-      timerLeft: null
+      timerLeft: null,
+      totalElapsed: 0,
+      currentSegment: { name: "Add a timer to your routine!", duration: "0" }
     };
   }
 
   componentDidMount() {
-    if (this.props.segments.length > 0) {
-      this.resetClick();
-    }
+    this.resetClick();
   }
 
   componentWillUnmount() {
@@ -65,14 +67,16 @@ export class TimeDisplay extends Component {
       timerIndex: 0,
       timerTarget: null,
       timerInstance: null,
-      timerLeft: firstSeg.duration
+      timerLeft: firstSeg.duration,
+      totalElapsed: 0,
+      currentSegment: firstSeg
     });
     let tempTime = moment.duration(firstSeg.duration, "s");
-    this.displaySegment.innerHTML = firstSeg.name;
+    this.elapsedDisplay.innerHTML = `00s / ${formatTime(totalTime(this.props.segments), 0)}`;
     this.displayMilliseconds.innerHTML = tempTime
       .get("milliseconds")
       .toString()
-      .padStart(3, "0");
+      .padStart(2, "0");
     this.displaySeconds.innerHTML = tempTime
       .get("seconds")
       .toString()
@@ -95,7 +99,7 @@ export class TimeDisplay extends Component {
       timerRunning: true
     });
 
-    let timerInstance = setInterval(this.displayTime, 30);
+    let timerInstance = setInterval(this.displayTime, 35);
 
     this.setState({
       timerInstance: timerInstance
@@ -103,16 +107,16 @@ export class TimeDisplay extends Component {
   }
 
   async stopTimer() {
+    clearInterval(this.state.timerInstance);
     let tempTimeLeft = this.state.timerTarget.diff(moment(), "s");
     await this.setStateAsync({
       timerLeft: tempTimeLeft,
       timerRunning: false
     });
-    clearInterval(this.state.timerInstance);
   }
 
   async displayTime() {
-    if (this.state.timerTarget.diff(moment(), "s") <= 0) {
+    if (this.state.timerTarget.diff(moment()) <= 0) {
       this.stopTimer();
       if (this.state.timerIndex < this.props.segments.length - 1) {
         this.nextSegment();
@@ -120,11 +124,18 @@ export class TimeDisplay extends Component {
         this.timerComplete();
       }
     } else {
-      let tempTime = moment.duration(this.state.timerTarget.diff(moment()));
-      this.displayMilliseconds.innerHTML = tempTime
-        .get("milliseconds")
+      const tempTime = moment.duration(this.state.timerTarget.diff(moment()));
+      const totalElapsed = Math.floor(
+        this.state.totalElapsed + this.state.currentSegment.duration - tempTime.as("seconds"),
+        1000
+      );
+      this.elapsedDisplay.innerHTML = `${formatTime(totalElapsed, 0)} / ${formatTime(
+        totalTime(this.props.segments),
+        0
+      )}`;
+      this.displayMilliseconds.innerHTML = Math.floor(tempTime.get("milliseconds") / 10)
         .toString()
-        .padStart(3, "0");
+        .padStart(2, "0");
       this.displaySeconds.innerHTML = tempTime
         .get("seconds")
         .toString()
@@ -141,40 +152,42 @@ export class TimeDisplay extends Component {
   }
 
   async nextSegment() {
-    let nextSegmentTime = this.props.segments[this.state.timerIndex + 1].duration;
+    let nextSegment = this.props.segments[this.state.timerIndex + 1];
     let nextTimerIndex = this.state.timerIndex + 1;
     await this.setStateAsync({
+      totalElapsed:
+        this.state.totalElapsed + this.props.segments[this.state.timerIndex].duration,
+      currentSegment: nextSegment,
       timerIndex: nextTimerIndex,
-      timerLeft: nextSegmentTime
+      timerLeft: nextSegment.duration
     });
-    this.displaySegment.innerHTML = this.props.segments[this.state.timerIndex].name;
     this.startTimer();
   }
 
   timerComplete() {
-    this.displaySegment.innerHTML = "Job's Done!";
+    let tempTime = totalTime(this.props.segments);
+    this.setState({
+      currentSegment: { name: "Job's Done!", duration: "0" },
+      totalElapsed: tempTime
+    });
+    this.elapsedDisplay.innerHTML = "(⌐■_■)";
     this.displayHours.innerHTML = "TT";
     this.displayMinutes.innerHTML = "9B";
-    this.displaySeconds.innerHTML = "XD";
-    this.displayMilliseconds.innerHTML = "CY@";
+    this.displaySeconds.innerHTML = "GG";
+    this.displayMilliseconds.innerHTML = "EZ";
   }
 
   render() {
     return (
       <Fragment>
-        <div className="d-flex justify-content-sm-center mt-2">
-          <h3
-            ref={ds => {
-              this.displaySegment = ds;
-            }}
-          >
-            Add a segment to your routine!
-          </h3>
+        <div className="container text-center pt-2">
+          <h1>
+            {this.props.current_routine.name} / {this.state.currentSegment.name}
+          </h1>
         </div>
-
         <div className="d-flex justify-content-sm-center">
           <div className="d-flex flex-row">
-            <div className="p-2">
+            <div>
               <h1
                 className="display-1"
                 ref={dh => {
@@ -184,10 +197,10 @@ export class TimeDisplay extends Component {
                 00
               </h1>
             </div>
-            <div className="p-2">
+            <div>
               <h1 className="display-1">:</h1>
             </div>
-            <div className="p-2">
+            <div>
               <h1
                 className="display-1"
                 ref={dm => {
@@ -197,10 +210,10 @@ export class TimeDisplay extends Component {
                 00
               </h1>
             </div>
-            <div className="p-2">
+            <div>
               <h1 className="display-1">:</h1>
             </div>
-            <div className="p-2">
+            <div>
               <h1
                 className="display-1"
                 ref={ds => {
@@ -210,10 +223,10 @@ export class TimeDisplay extends Component {
                 00
               </h1>
             </div>
-            <div className="p-2">
+            <div>
               <h1 className="display-1">:</h1>
             </div>
-            <div className="p-2">
+            <div>
               <h1
                 className="display-1"
                 ref={dms => {
@@ -226,14 +239,21 @@ export class TimeDisplay extends Component {
           </div>
         </div>
 
-        <div className="d-flex justify-content-sm-center mb-3">
+        <div className="d-flex justify-content-sm-center">
+          <h1
+            ref={s => {
+              this.elapsedDisplay = s;
+            }}
+          >
+            00
+          </h1>
+        </div>
+
+        <div className="d-flex justify-content-sm-center py-3">
           <button
             className="btn btn-primary mr-2"
             onClick={() => {
               this.startStopClick();
-            }}
-            ref={bt => {
-              this.startStop = bt;
             }}
           >
             {" "}
@@ -244,14 +264,12 @@ export class TimeDisplay extends Component {
             onClick={() => {
               this.resetClick();
             }}
-            ref={bt => {
-              this.reset = bt;
-            }}
           >
             {" "}
             Reset
           </button>
         </div>
+        <Segments />
       </Fragment>
     );
   }

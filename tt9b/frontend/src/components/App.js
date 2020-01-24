@@ -14,9 +14,9 @@ import Login from "./accounts/Login";
 import Register from "./accounts/Register";
 import PrivateRoute from "./common/PrivateRoute";
 import Header from "./layout/Header";
-import RoutinesDashboard from "./routines/Dashboard";
-import TimeViewsDashboard from "./timeviews/Dashboard";
-import Stopwatch from "./timeviews/Stopwatch";
+import HomeDashboard from "./home/Dashboard";
+import RoutineDashboard from "./routine/Dashboard";
+import StopWatchDashboard from "./stopwatch/Dashboard";
 
 // Alert Options
 const alertOptions = {
@@ -37,11 +37,11 @@ class App extends Component {
               <Header />
               <Alerts />
               <div className="container">
-                <PrivateRoute exact path="/" component={RoutinesDashboard} />
+                <PrivateRoute exact path="/" component={HomeDashboard} />
                 <Route exact path="/register" component={Register} />
                 <Route exact path="/login" component={Login} />
-                <Route exact path="/stopwatch" component={Stopwatch} />
-                <PrivateRoute exact path="/routine" component={TimeViewsDashboard} />
+                <Route exact path="/stopwatch" component={StopWatchDashboard} />
+                <PrivateRoute exact path="/routine" component={RoutineDashboard} />
               </div>
             </Fragment>
           </Router>

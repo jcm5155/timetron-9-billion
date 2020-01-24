@@ -4,6 +4,8 @@ import PropTypes from "prop-types";
 import { getRoutines, deleteRoutine, setCurrentRoutine } from "../../actions/routines";
 import { getSegments } from "../../actions/segments";
 import { Redirect } from "react-router-dom";
+import { moment } from "moment";
+import { formatTime, totalTime } from "../../utils/SharedFunctions";
 
 export class Routines extends Component {
   constructor(props) {
@@ -53,7 +55,9 @@ export class Routines extends Component {
     }
     return (
       <Fragment>
-        <h1 className="text-center">Routines</h1>
+        <div className="d-flex justify-content-sm-center py-2">
+          <h2 className="text-center pt-2"> {this.props.auth.user.username}'s Routines</h2>
+        </div>
         <table className="table table-striped">
           <thead>
             <tr>
@@ -70,7 +74,7 @@ export class Routines extends Component {
               <tr key={routine.id}>
                 <td>{routine.name}</td>
                 <td>{routine.date_created}</td>
-                <td>Total Time (NYI)</td>
+                <td>NYI</td>
                 <td>{routine.plays}</td>
                 <td>
                   <button
@@ -105,7 +109,8 @@ export class Routines extends Component {
 }
 
 const mapStateToProps = state => ({
-  routines: state.routines.routines
+  routines: state.routines.routines,
+  auth: state.auth
 });
 
 export default connect(mapStateToProps, {

@@ -2,7 +2,7 @@ import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { getSegments, deleteSegment, addSegment } from "../../actions/segments";
-import { formatTime } from "../common/SharedFunctions";
+import { formatTime } from "../../utils/SharedFunctions";
 
 export class RoutineTimer extends Component {
   static propTypes = {
@@ -13,9 +13,6 @@ export class RoutineTimer extends Component {
   render() {
     return (
       <Fragment>
-        <div className="text-center">
-          <h1>{this.props.current_routine.name}</h1>
-        </div>
         <table className="table table-striped">
           <thead>
             <tr>
@@ -29,7 +26,7 @@ export class RoutineTimer extends Component {
             {this.props.segments.map(segment => (
               <tr key={segment.id}>
                 <td>{segment.name}</td>
-                <td>{formatTime(segment.duration)}</td>
+                <td>{formatTime(segment.duration, 0)}</td>
                 <td>{segment.position}</td>
                 <td>
                   <button

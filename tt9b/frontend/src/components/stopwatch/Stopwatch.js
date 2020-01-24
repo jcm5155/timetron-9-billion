@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
+import Splits from "./Splits";
 
 export class Stopwatch extends Component {
   constructor(props) {
@@ -9,6 +10,7 @@ export class Stopwatch extends Component {
     this.startStopClick = this.startStopClick.bind(this);
     this.startTimer = this.startTimer.bind(this);
     this.stopTimer = this.stopTimer.bind(this);
+    this.splitTimer = this.splitTimer.bind(this);
     this.displayTime = this.displayTime.bind(this);
     this.setStateAsync = this.setStateAsync.bind(this);
 
@@ -16,7 +18,8 @@ export class Stopwatch extends Component {
       timerRunning: false,
       timeElapsed: null,
       timeFrom: null,
-      timerInstance: null
+      timerInstance: null,
+      splitTimes: []
     };
   }
 
@@ -27,10 +30,7 @@ export class Stopwatch extends Component {
   }
 
   componentDidMount() {
-    this.displayHours.innerHTML = "00";
-    this.displayMinutes.innerHTML = "00";
-    this.displaySeconds.innerHTML = "00";
-    this.displayMilliseconds.innerHTML = "000";
+    this.resetClick();
   }
 
   componentWillUnmount() {
@@ -59,12 +59,13 @@ export class Stopwatch extends Component {
       timerRunning: false,
       timeElapsed: null,
       timerInstance: null,
-      timeFrom: null
+      timeFrom: null,
+      splitTimes: []
     });
     this.displayHours.innerHTML = "00";
     this.displayMinutes.innerHTML = "00";
     this.displaySeconds.innerHTML = "00";
-    this.displayMilliseconds.innerHTML = "000";
+    this.displayMilliseconds.innerHTML = "00";
   }
 
   async startTimer() {
@@ -73,9 +74,7 @@ export class Stopwatch extends Component {
       timeFrom: moment(),
       timerRunning: true
     });
-
-    let timerInstance = setInterval(this.displayTime, 30);
-
+    let timerInstance = setInterval(this.displayTime, 35);
     this.setState({
       timerInstance: timerInstance
     });
@@ -90,13 +89,23 @@ export class Stopwatch extends Component {
     clearInterval(this.state.timerInstance);
   }
 
+  splitTimer(split) {
+    if (this.state.timerRunning) {
+      this.setState(prevState => ({
+        splitTimes: [split, ...prevState.splitTimes]
+      }));
+    }
+  }
+
   async displayTime() {
-    let currentPlusElapsed = moment().add(this.state.timeElapsed);
-    let tempTime = moment.duration(currentPlusElapsed.diff(this.state.timeFrom));
-    this.displayMilliseconds.innerHTML = tempTime
-      .get("milliseconds")
+    let tempTime = moment.duration(
+      moment()
+        .add(this.state.timeElapsed)
+        .diff(this.state.timeFrom)
+    );
+    this.displayMilliseconds.innerHTML = Math.floor(tempTime.get("milliseconds") / 10)
       .toString()
-      .padStart(3, "0");
+      .padStart(2, "0");
     this.displaySeconds.innerHTML = tempTime
       .get("seconds")
       .toString()
@@ -161,30 +170,40 @@ export class Stopwatch extends Component {
         </div>
         <div className="d-flex justify-content-sm-center mb-3">
           <button
-            className="btn btn-primary mr-2"
+            className="btn btn-primary mx-2"
             onClick={() => {
               this.startStopClick();
-            }}
-            ref={bt => {
-              this.startStop = bt;
             }}
           >
             {" "}
             Start/Stop
           </button>
           <button
-            className="btn btn-secondary ml-2"
+            className="btn btn-secondary mx-2"
             onClick={() => {
               this.resetClick();
-            }}
-            ref={bt => {
-              this.reset = bt;
             }}
           >
             {" "}
             Reset
           </button>
+          <button
+            className="btn btn-info mx-2"
+            onClick={() => {
+              this.splitTimer(
+                moment.duration(
+                  moment()
+                    .add(this.state.timeElapsed)
+                    .diff(this.state.timeFrom)
+                )
+              );
+            }}
+          >
+            {" "}
+            Split
+          </button>
         </div>
+        <Splits splitTimes={this.state.splitTimes} />
       </Fragment>
     );
   }
