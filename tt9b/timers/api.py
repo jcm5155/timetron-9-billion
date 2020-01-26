@@ -17,6 +17,8 @@ class RoutineViewSet(viewsets.ModelViewSet):
         serializer.save(author=self.request.user)
 
 
+
+
 # TimeSegment viewset
 class SegmentViewSet(viewsets.ModelViewSet):
     permission_classes = [

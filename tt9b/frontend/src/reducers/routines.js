@@ -2,7 +2,8 @@ import {
   GET_ROUTINES,
   DELETE_ROUTINE,
   ADD_ROUTINE,
-  SET_CURRENT_ROUTINE
+  SET_CURRENT_ROUTINE,
+  UPDATE_ROUTINE
 } from "../actions/types.js";
 
 const initialState = {
@@ -20,9 +21,16 @@ export default function(state = initialState, action) {
     case DELETE_ROUTINE:
       return {
         ...state,
-        routines: state.routines.filter(
-          routine => routine.id !== action.payload
-        )
+        routines: state.routines.filter(routine => routine.id !== action.payload)
+      };
+    case UPDATE_ROUTINE:
+      return {
+        ...state,
+        current_routine: action.payload,
+        routines: [
+          ...state.routines.filter(routine => routine.id !== action.payload.id),
+          action.payload
+        ]
       };
     case ADD_ROUTINE:
       return {

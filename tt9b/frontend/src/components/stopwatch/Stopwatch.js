@@ -2,15 +2,16 @@ import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
 import Splits from "./Splits";
+import { formatDisplay } from "../../utils/SharedFunctions";
 
 export class Stopwatch extends Component {
   constructor(props) {
     super(props);
 
     this.startStopClick = this.startStopClick.bind(this);
+    this.splitClick = this.splitClick.bind(this);
     this.startTimer = this.startTimer.bind(this);
     this.stopTimer = this.stopTimer.bind(this);
-    this.splitTimer = this.splitTimer.bind(this);
     this.displayTime = this.displayTime.bind(this);
     this.setStateAsync = this.setStateAsync.bind(this);
 
@@ -23,12 +24,6 @@ export class Stopwatch extends Component {
     };
   }
 
-  setStateAsync(state) {
-    return new Promise(resolve => {
-      this.setState(state, resolve);
-    });
-  }
-
   componentDidMount() {
     this.resetClick();
   }
@@ -37,12 +32,14 @@ export class Stopwatch extends Component {
     clearInterval(this.state.timerInstance);
   }
 
+  // Needed to allow awaiting for state changes that are required before resuming
   setStateAsync(state) {
     return new Promise(resolve => {
       this.setState(state, resolve);
     });
   }
 
+  // Handler for start/stop button click
   startStopClick(e) {
     if (this.state.timerRunning) {
       this.stopTimer();
@@ -51,6 +48,7 @@ export class Stopwatch extends Component {
     }
   }
 
+  // Resets component state
   async resetClick(e) {
     if (this.state.timerInstance) {
       clearInterval(this.state.timerInstance);
@@ -68,6 +66,7 @@ export class Stopwatch extends Component {
     this.displayMilliseconds.innerHTML = "00";
   }
 
+  // Starts the timer
   async startTimer() {
     let tempTimeElapsed = this.state.timeElapsed;
     await this.setStateAsync({
@@ -80,6 +79,7 @@ export class Stopwatch extends Component {
     });
   }
 
+  // Stops the timer and stores total time elapsed in component state
   async stopTimer() {
     let tempTimeElapsed = this.state.timeElapsed + moment().diff(this.state.timeFrom);
     await this.setStateAsync({
@@ -89,35 +89,31 @@ export class Stopwatch extends Component {
     clearInterval(this.state.timerInstance);
   }
 
-  splitTimer(split) {
+  // Stores split times in component state
+  splitClick() {
     if (this.state.timerRunning) {
+      const split = moment.duration(
+        moment()
+          .add(this.state.timeElapsed)
+          .diff(this.state.timeFrom)
+      );
       this.setState(prevState => ({
         splitTimes: [split, ...prevState.splitTimes]
       }));
     }
   }
 
+  // Displays current time
   async displayTime() {
-    let tempTime = moment.duration(
+    let currentTime = moment.duration(
       moment()
         .add(this.state.timeElapsed)
         .diff(this.state.timeFrom)
     );
-    this.displayMilliseconds.innerHTML = Math.floor(tempTime.get("milliseconds") / 10)
-      .toString()
-      .padStart(2, "0");
-    this.displaySeconds.innerHTML = tempTime
-      .get("seconds")
-      .toString()
-      .padStart(2, "0");
-    this.displayMinutes.innerHTML = tempTime
-      .get("minutes")
-      .toString()
-      .padStart(2, "0");
-    this.displayHours.innerHTML = tempTime
-      .get("hours")
-      .toString()
-      .padStart(2, "0");
+    this.displayMilliseconds.innerHTML = formatDisplay(currentTime, "ms");
+    this.displaySeconds.innerHTML = formatDisplay(currentTime, "s");
+    this.displayMinutes.innerHTML = formatDisplay(currentTime, "m");
+    this.displayHours.innerHTML = formatDisplay(currentTime, "h");
   }
 
   render() {
@@ -190,13 +186,7 @@ export class Stopwatch extends Component {
           <button
             className="btn btn-info mx-2"
             onClick={() => {
-              this.splitTimer(
-                moment.duration(
-                  moment()
-                    .add(this.state.timeElapsed)
-                    .diff(this.state.timeFrom)
-                )
-              );
+              this.splitClick();
             }}
           >
             {" "}

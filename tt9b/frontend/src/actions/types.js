@@ -3,6 +3,8 @@ export const GET_ROUTINES = "GET_ROUTINES";
 export const DELETE_ROUTINE = "DELETE_ROUTINE";
 export const ADD_ROUTINE = "ADD_ROUTINE";
 export const SET_CURRENT_ROUTINE = "SET_CURRENT_ROUTINE";
+export const UPDATE_ROUTINE = "UPDATE_ROUTINE";
+export const SET_ORDER = "SET_ORDER";
 
 // TimeSegment actions
 export const GET_SEGMENTS = "GET_SEGMENTS";

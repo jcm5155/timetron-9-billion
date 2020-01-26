@@ -1,12 +1,16 @@
 import React, { Fragment } from "react";
 import TimeDisplay from "./TimeDisplay";
-import Form from "./Form";
+import Segments from "./segments/Segments";
+import NewSegmentForm from "./NewSegmentForm";
+import UpdateRoutineForm from "./UpdateRoutineForm";
 
 export default function Dashboard() {
   return (
     <Fragment>
       <TimeDisplay />
-      <Form />
+      <Segments />
+      <NewSegmentForm />
+      <UpdateRoutineForm />
     </Fragment>
   );
 }

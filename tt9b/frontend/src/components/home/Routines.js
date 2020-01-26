@@ -1,11 +1,14 @@
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { getRoutines, deleteRoutine, setCurrentRoutine } from "../../actions/routines";
+import {
+  getRoutines,
+  deleteRoutine,
+  setCurrentRoutine,
+  updateRoutine
+} from "../../actions/routines";
 import { getSegments } from "../../actions/segments";
 import { Redirect } from "react-router-dom";
-import { moment } from "moment";
-import { formatTime, totalTime } from "../../utils/SharedFunctions";
 
 export class Routines extends Component {
   constructor(props) {
@@ -44,6 +47,15 @@ export class Routines extends Component {
   async onSelectClick(id) {
     await this.props.setCurrentRoutine(id);
     await this.props.getSegments(id);
+
+    // Set order for routines without a current order value
+    if (this.props.current_routine.order == "" && this.props.segments.length > 0) {
+      await this.props.updateRoutine({
+        ...this.props.current_routine,
+        order: this.props.segments.map(segment => segment.id).join(",")
+      });
+    }
+
     await this.setStateAsync({
       redirect: true
     });
@@ -110,12 +122,15 @@ export class Routines extends Component {
 
 const mapStateToProps = state => ({
   routines: state.routines.routines,
-  auth: state.auth
+  auth: state.auth,
+  current_routine: state.routines.current_routine,
+  segments: state.segments.segments
 });
 
 export default connect(mapStateToProps, {
   getRoutines,
   deleteRoutine,
   setCurrentRoutine,
-  getSegments
+  getSegments,
+  updateRoutine
 })(Routines);

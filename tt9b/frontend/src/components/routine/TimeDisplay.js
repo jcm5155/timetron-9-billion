@@ -1,8 +1,7 @@
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import moment from "moment";
-import Segments from "./Segments";
-import { formatTime, totalTime } from "../../utils/SharedFunctions";
+import { formatDisplay, formatTime, totalTime } from "../../utils/SharedFunctions";
 import PropTypes from "prop-types";
 
 export class TimeDisplay extends Component {
@@ -13,6 +12,7 @@ export class TimeDisplay extends Component {
     this.startTimer = this.startTimer.bind(this);
     this.stopTimer = this.stopTimer.bind(this);
     this.resetTimer = this.resetTimer.bind(this);
+    this.runTimer = this.runTimer.bind(this);
     this.displayTime = this.displayTime.bind(this);
     this.setStateAsync = this.setStateAsync.bind(this);
     this.timerComplete = this.timerComplete.bind(this);
@@ -33,6 +33,11 @@ export class TimeDisplay extends Component {
     this.resetClick();
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps !== this.props) {
+      this.resetClick();
+    }
+  }
   componentWillUnmount() {
     clearInterval(this.state.timerInstance);
   }
@@ -61,7 +66,7 @@ export class TimeDisplay extends Component {
   }
 
   async resetTimer() {
-    let firstSeg = this.props.segments[0];
+    const firstSeg = this.props.segments[0];
     await this.setStateAsync({
       timerRunning: false,
       timerIndex: 0,
@@ -72,50 +77,37 @@ export class TimeDisplay extends Component {
       currentSegment: firstSeg
     });
     let tempTime = moment.duration(firstSeg.duration, "s");
+    this.displayMilliseconds.innerHTML = formatDisplay(tempTime, "ms");
+    this.displaySeconds.innerHTML = formatDisplay(tempTime, "s");
+    this.displayMinutes.innerHTML = formatDisplay(tempTime, "m");
+    this.displayHours.innerHTML = formatDisplay(tempTime, "h");
+
     this.elapsedDisplay.innerHTML = `00s / ${formatTime(totalTime(this.props.segments), 0)}`;
-    this.displayMilliseconds.innerHTML = tempTime
-      .get("milliseconds")
-      .toString()
-      .padStart(2, "0");
-    this.displaySeconds.innerHTML = tempTime
-      .get("seconds")
-      .toString()
-      .padStart(2, "0");
-    this.displayMinutes.innerHTML = tempTime
-      .get("minutes")
-      .toString()
-      .padStart(2, "0");
-    this.displayHours.innerHTML = tempTime
-      .get("hours")
-      .toString()
-      .padStart(2, "0");
+    this.currentProgressBar.style.width = "0";
+    this.overallProgressBar.style.width = "0";
   }
 
   async startTimer() {
-    let timerTarget = moment().add(this.state.timerLeft, "s");
-
     await this.setStateAsync({
-      timerTarget: timerTarget,
-      timerRunning: true
+      timerTarget: moment().add(this.state.timerLeft, "s", true)
     });
-
-    let timerInstance = setInterval(this.displayTime, 35);
-
+    let timerInstance = setInterval(this.runTimer, 30);
     this.setState({
-      timerInstance: timerInstance
+      timerInstance: timerInstance,
+      timerRunning: true
     });
   }
 
   async stopTimer() {
+    let tempTimeLeft = this.state.timerTarget.diff(moment(), "s", true);
     clearInterval(this.state.timerInstance);
-    let tempTimeLeft = this.state.timerTarget.diff(moment(), "s");
     await this.setStateAsync({
       timerLeft: tempTimeLeft,
       timerRunning: false
     });
   }
 
-  async displayTime() {
+  async runTimer() {
     if (this.state.timerTarget.diff(moment()) <= 0) {
       this.stopTimer();
       if (this.state.timerIndex < this.props.segments.length - 1) {
@@ -124,31 +116,29 @@ export class TimeDisplay extends Component {
         this.timerComplete();
       }
     } else {
-      const tempTime = moment.duration(this.state.timerTarget.diff(moment()));
-      const totalElapsed = Math.floor(
-        this.state.totalElapsed + this.state.currentSegment.duration - tempTime.as("seconds"),
-        1000
-      );
-      this.elapsedDisplay.innerHTML = `${formatTime(totalElapsed, 0)} / ${formatTime(
-        totalTime(this.props.segments),
-        0
-      )}`;
-      this.displayMilliseconds.innerHTML = Math.floor(tempTime.get("milliseconds") / 10)
-        .toString()
-        .padStart(2, "0");
-      this.displaySeconds.innerHTML = tempTime
-        .get("seconds")
-        .toString()
-        .padStart(2, "0");
-      this.displayMinutes.innerHTML = tempTime
-        .get("minutes")
-        .toString()
-        .padStart(2, "0");
-      this.displayHours.innerHTML = tempTime
-        .get("hours")
-        .toString()
-        .padStart(2, "0");
+      this.displayTime();
     }
+  }
+
+  async displayTime() {
+    const currentTime = moment.duration(this.state.timerTarget.diff(moment()));
+    this.displayMilliseconds.innerHTML = formatDisplay(currentTime, "ms");
+    this.displaySeconds.innerHTML = formatDisplay(currentTime, "s");
+    this.displayMinutes.innerHTML = formatDisplay(currentTime, "m");
+    this.displayHours.innerHTML = formatDisplay(currentTime, "h");
+    const totalElapsed =
+      this.state.totalElapsed + this.state.currentSegment.duration - currentTime.as("seconds");
+
+    this.elapsedDisplay.innerHTML = `${formatTime(
+      Math.floor(totalElapsed, 1000),
+      0
+    )} / ${formatTime(totalTime(this.props.segments), 0)}`;
+    this.currentProgressBar.style.width = `${((this.state.currentSegment.duration -
+      currentTime.as("seconds")) /
+      this.state.currentSegment.duration) *
+      100}%`;
+    this.overallProgressBar.style.width = `${(totalElapsed / totalTime(this.props.segments)) *
+      100}%`;
   }
 
   async nextSegment() {
@@ -181,9 +171,7 @@ export class TimeDisplay extends Component {
     return (
       <Fragment>
         <div className="container text-center pt-2">
-          <h1>
-            {this.props.current_routine.name} / {this.state.currentSegment.name}
-          </h1>
+          <h1>{this.state.currentSegment.name}</h1>
         </div>
         <div className="d-flex justify-content-sm-center">
           <div className="d-flex flex-row">
@@ -233,7 +221,7 @@ export class TimeDisplay extends Component {
                   this.displayMilliseconds = dms;
                 }}
               >
-                000
+                00
               </h1>
             </div>
           </div>
@@ -245,7 +233,7 @@ export class TimeDisplay extends Component {
               this.elapsedDisplay = s;
             }}
           >
-            00
+            {}
           </h1>
         </div>
 
@@ -269,7 +257,24 @@ export class TimeDisplay extends Component {
             Reset
           </button>
         </div>
-        <Segments />
+
+        <div className="routine-progress-bar">
+          <div
+            className="routine-progress-bar-filler"
+            ref={pB => {
+              this.currentProgressBar = pB;
+            }}
+          />
+        </div>
+
+        <div className="routine-progress-bar">
+          <div
+            className="routine-progress-bar-filler"
+            ref={pb => {
+              this.overallProgressBar = pb;
+            }}
+          />
+        </div>
       </Fragment>
     );
   }
@@ -277,7 +282,8 @@ export class TimeDisplay extends Component {
 
 const mapStateToProps = state => ({
   current_routine: state.routines.current_routine,
-  segments: state.segments.segments
+  segments: state.segments.segments,
+  order: state.routines.current_routine.order
 });
 
 export default connect(mapStateToProps, {})(TimeDisplay);

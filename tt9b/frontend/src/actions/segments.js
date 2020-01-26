@@ -6,10 +6,12 @@ import { tokenConfig } from "./auth";
 // GET SEGMENTS
 export const getSegments = id => async (dispatch, getState) => {
   try {
+    const currentRoutineOrder = getState().routines.current_routine.order;
     const response = await axios.get(`/api/segments/?id=${id}`, tokenConfig(getState));
     dispatch({
       type: GET_SEGMENTS,
-      payload: response.data
+      payload: response.data,
+      current_routine_order: currentRoutineOrder
     });
   } catch (error) {
     return dispatch(returnErrors(error.response.data, error.response.status));

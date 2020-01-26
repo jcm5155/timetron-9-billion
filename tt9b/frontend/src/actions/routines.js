@@ -1,5 +1,12 @@
 import axios from "axios";
-import { GET_ROUTINES, DELETE_ROUTINE, ADD_ROUTINE, SET_CURRENT_ROUTINE } from "./types";
+import {
+  GET_ROUTINES,
+  DELETE_ROUTINE,
+  ADD_ROUTINE,
+  SET_CURRENT_ROUTINE,
+  UPDATE_ROUTINE,
+  SET_ORDER
+} from "./types";
 import { createMessage, returnErrors } from "./messages";
 import { tokenConfig } from "./auth";
 
@@ -44,8 +51,21 @@ export const addRoutine = routine => (dispatch, getState) => {
     .catch(error => dispatch(returnErrors(error.response.data, error.response.status)));
 };
 
-// SET CURRENT ROUTINE
+// UPDATE ROUTINE
+export const updateRoutine = routine => async (dispatch, getState) => {
+  axios
+    .put(`/api/routines/${routine.id}/`, routine, tokenConfig(getState))
+    .then(response => {
+      dispatch(createMessage({ routineAdd: "Routine Updated" }));
+      dispatch({
+        type: UPDATE_ROUTINE,
+        payload: response.data
+      });
+    })
+    .catch(error => dispatch(returnErrors(error.response.data, error.response.status)));
+};
 
+// SET CURRENT ROUTINE
 export const setCurrentRoutine = id => async (dispatch, getState) => {
   try {
     const response = await axios.get(`/api/routines/${id}`, tokenConfig(getState));
@@ -57,3 +77,6 @@ export const setCurrentRoutine = id => async (dispatch, getState) => {
     return dispatch(returnErrors(error.response.data, error.response.status));
   }
 };
+
+// SET CURRENT SEGMENT ORDER
+export const setOrder = id => async (dispatch, getState) => {};

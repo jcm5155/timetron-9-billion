@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { addRoutine } from "../../actions/routines";
 
-export class Form extends Component {
+export class NewRoutineForm extends Component {
   state = {
     name: ""
   };
@@ -20,7 +20,8 @@ export class Form extends Component {
     const { name } = this.state;
     const routine = {
       name: name,
-      author: id
+      author: id,
+      order: []
     };
     this.props.addRoutine(routine);
     this.setState({
@@ -59,4 +60,4 @@ const mapStateToProps = state => ({
   auth: state.auth
 });
 
-export default connect(mapStateToProps, { addRoutine })(Form);
+export default connect(mapStateToProps, { addRoutine })(NewRoutineForm);

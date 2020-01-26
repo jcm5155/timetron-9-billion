@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { addSegment } from "../../actions/segments";
 import { segmentFormSanitizer } from "../../utils/SharedFunctions";
 
-export class Form extends Component {
+export class NewSegmentForm extends Component {
   state = {
     name: "",
     durationS: "",
@@ -22,7 +22,7 @@ export class Form extends Component {
   onSubmit = e => {
     e.preventDefault();
     const { id } = this.props.current_routine;
-    const { name, position, durationS, durationM, durationH } = this.state;
+    const { name, durationS, durationM, durationH } = this.state;
     const duration =
       segmentFormSanitizer(durationS, "s") +
       segmentFormSanitizer(durationM, "m") +
@@ -30,7 +30,7 @@ export class Form extends Component {
     const segment = {
       name,
       duration: duration,
-      position,
+      position: this.props.segments.length + 1,
       parent: id
     };
     this.props.addSegment(segment);
@@ -38,13 +38,12 @@ export class Form extends Component {
       name: "",
       durationS: "",
       durationM: "",
-      durationH: "",
-      position: ""
+      durationH: ""
     });
   };
 
   render() {
-    const { name, durationS, durationM, durationH, position } = this.state;
+    const { name, durationS, durationM, durationH } = this.state;
     return (
       <div className="card card-body mt-4 mb-4">
         <h2>Add Segment</h2>
@@ -109,16 +108,6 @@ export class Form extends Component {
           </div>
 
           <div className="form-group">
-            <label>Position</label>
-            <input
-              className="form-control"
-              type="text"
-              name="position"
-              onChange={this.onChange}
-              value={position}
-            />
-          </div>
-          <div className="form-group">
             <button type="submit" className="btn btn-primary">
               Submit
             </button>
@@ -131,7 +120,8 @@ export class Form extends Component {
 
 const mapStateToProps = state => ({
   auth: state.auth,
-  current_routine: state.routines.current_routine
+  current_routine: state.routines.current_routine,
+  segments: state.segments.segments
 });
 
-export default connect(mapStateToProps, { addSegment })(Form);
+export default connect(mapStateToProps, { addSegment })(NewSegmentForm);
