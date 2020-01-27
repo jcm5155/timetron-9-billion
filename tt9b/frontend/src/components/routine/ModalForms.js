@@ -44,11 +44,11 @@ function ModalForms(props) {
   const [routineForm, setRoutineFormShow] = useState(false);
   return (
     <Container>
-      <Row className="justify-content-md-center">
+      <Row className="justify-content-md-center" style={{ marginTop: 5 }}>
         <ButtonToolbar>
           <Button
             variant="primary"
-            style={{ paddingRight: 5 }}
+            style={{ margin: 5 }}
             onClick={() => setSegmentFormShow(true)}
           >
             New Segment
@@ -56,7 +56,7 @@ function ModalForms(props) {
           <SegmentForm show={segmentForm} onHide={() => setSegmentFormShow(false)} />
           <Button
             variant="secondary"
-            style={{ paddingLeft: 5 }}
+            style={{ margin: 5 }}
             onClick={() => setRoutineFormShow(true)}
           >
             Rename Routine

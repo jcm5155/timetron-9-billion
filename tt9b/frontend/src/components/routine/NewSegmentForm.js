@@ -51,6 +51,7 @@ export class NewSegmentForm extends Component {
     const { name, durationS, durationM, durationH } = this.state;
     return (
       <div className="card card-body mt-4 mb-4">
+        <h2>Add Segment</h2>
         <form onSubmit={this.onSubmit}>
           <div className="form-row">
             <div className="form-group">
@@ -112,7 +113,7 @@ export class NewSegmentForm extends Component {
           </div>
 
           <div className="form-group">
-            <button type="submit" className="btn btn-primary" data-dismiss="modal">
+            <button type="submit" className="btn btn-primary">
               Submit
             </button>
           </div>

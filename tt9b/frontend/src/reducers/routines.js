@@ -3,12 +3,14 @@ import {
   DELETE_ROUTINE,
   ADD_ROUTINE,
   SET_CURRENT_ROUTINE,
-  UPDATE_ROUTINE
+  UPDATE_ROUTINE,
+  TOGGLE_TIMER
 } from "../actions/types.js";
 
 const initialState = {
   routines: [],
-  current_routine: null
+  current_routine: null,
+  timer_running: false
 };
 
 export default function(state = initialState, action) {
@@ -41,6 +43,11 @@ export default function(state = initialState, action) {
       return {
         ...state,
         current_routine: action.payload
+      };
+    case TOGGLE_TIMER:
+      return {
+        ...state,
+        timer_running: action.payload
       };
     default:
       return state;

@@ -6,6 +6,7 @@ export const SET_CURRENT_ROUTINE = "SET_CURRENT_ROUTINE";
 export const UPDATE_ROUTINE = "UPDATE_ROUTINE";
 export const SET_ORDER = "SET_ORDER";
 export const CLEAR_ROUTINES = "CLEAR_ROUTINES";
+export const TOGGLE_TIMER = "TOGGLE_TIMER";
 
 // TimeSegment actions
 export const GET_SEGMENTS = "GET_SEGMENTS";

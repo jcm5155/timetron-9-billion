@@ -6,6 +6,11 @@ import { formatDisplay, formatTime, totalTime } from "../../utils/SharedFunction
 import { Container, Row, Col, Button } from "react-bootstrap";
 import PropTypes from "prop-types";
 
+// I independently have both a component boolean and an application state boolean for whether the timer is running.
+// For some reason the application state boolean isn't cooperating/updating fast enough (even when awaited) for the operations in the component state.
+// I'll figure this out later (probably).
+import { toggleTimer } from "../../actions/routines";
+
 const ProgressBar = styled.div`
   position: relative;
   height: 28px;
@@ -15,8 +20,14 @@ const ProgressBar = styled.div`
   margin-top: 10px;
 `;
 
-const ProgressBarFiller = styled.div`
-  background: #1da598;
+const OverallProgressBarFiller = styled.div`
+  background: #8b9b9d;
+  height: 100%;
+  border-radius: inherit;
+`;
+
+const CurrentProgressBarFiller = styled.div`
+  background: #3f97d7;
   height: 100%;
   border-radius: inherit;
 `;
@@ -30,6 +41,8 @@ export class TimeDisplay extends Component {
     super(props);
 
     this.startStopClick = this.startStopClick.bind(this);
+    this.previousClick = this.previousClick.bind(this);
+    this.nextClick = this.nextClick.bind(this);
     this.startTimer = this.startTimer.bind(this);
     this.stopTimer = this.stopTimer.bind(this);
     this.resetTimer = this.resetTimer.bind(this);
@@ -86,17 +99,48 @@ export class TimeDisplay extends Component {
     }
   }
 
+  async previousClick(e) {
+    if (this.state.timerIndex > 0) {
+      this.stopTimer();
+      const newIndex = this.state.timerIndex - 1;
+      let newTimeElapsed = 0;
+
+      if (newIndex != 0) {
+        newTimeElapsed = this.props.segments
+          .slice(0, newIndex)
+          .map(curr => curr.duration)
+          .reduce((accum, curr) => accum + curr);
+      }
+
+      await this.setStateAsync({
+        timerLeft: this.props.segments[newIndex].duration,
+        totalElapsed: newTimeElapsed,
+        timerIndex: newIndex,
+        currentSegment: this.props.segments[newIndex]
+      });
+      this.startStopClick();
+    }
+  }
+
+  async nextClick(e) {
+    if (this.state.timerIndex < this.props.segments.length - 1) {
+      this.stopTimer();
+      this.nextSegment();
+    }
+  }
+
   async resetTimer() {
     const firstSeg = this.props.segments[0];
     await this.setStateAsync({
       timerRunning: false,
       timerIndex: 0,
-      timerTarget: null,
+      timerTarget: 0,
       timerInstance: null,
       timerLeft: firstSeg.duration,
       totalElapsed: 0,
       currentSegment: firstSeg
     });
+    this.props.toggleTimer(false);
     let tempTime = moment.duration(firstSeg.duration, "s");
     this.mainTimeDisplay.innerHTML = `${formatDisplay(tempTime, "h")}:${formatDisplay(
       tempTime,
@@ -118,6 +162,7 @@ export class TimeDisplay extends Component {
       timerInstance: timerInstance,
       timerRunning: true
     });
+    this.props.toggleTimer(true);
   }
 
   async stopTimer() {
@@ -127,6 +172,7 @@ export class TimeDisplay extends Component {
       timerLeft: tempTimeLeft,
       timerRunning: false
     });
+    this.props.toggleTimer(false);
   }
 
   async runTimer() {
@@ -177,7 +223,7 @@ export class TimeDisplay extends Component {
       timerIndex: nextTimerIndex,
       timerLeft: nextSegment.duration
     });
-    this.startTimer();
+    this.startStopClick();
   }
 
   timerComplete() {
@@ -196,8 +242,8 @@ export class TimeDisplay extends Component {
       <Fragment>
         <Container style={{ textAlign: "center" }}>
           <Row>
-            <Col>
-              <h1>{this.state.currentSegment.name}</h1>
+            <Col style={{ marginTop: 20 }}>
+              <h1 style={{ fontSize: "4em" }}>{this.state.currentSegment.name}</h1>
             </Col>
           </Row>
           <Row>
@@ -224,7 +270,15 @@ export class TimeDisplay extends Component {
 
           <Row>
             <Col>
-              {" "}
+              <Button
+                variant="info"
+                style={{ margin: 4 }}
+                onClick={() => {
+                  this.previousClick();
+                }}
+              >
+                {" << "}
+              </Button>
               <Button
                 variant="primary"
                 style={{ margin: 4 }}
@@ -245,13 +299,23 @@ export class TimeDisplay extends Component {
                 {" "}
                 Reset
               </Button>
+              <Button
+                variant="info"
+                style={{ margin: 4 }}
+                onClick={() => {
+                  this.nextClick();
+                }}
+              >
+                {" "}
+                >>
+              </Button>
             </Col>
           </Row>
 
           <Row>
             <Col>
               <ProgressBar>
-                <ProgressBarFiller
+                <CurrentProgressBarFiller
                   ref={pB => {
                     this.currentProgressBar = pB;
                   }}
@@ -259,7 +323,7 @@ export class TimeDisplay extends Component {
               </ProgressBar>
 
               <ProgressBar>
-                <ProgressBarFiller
+                <OverallProgressBarFiller
                   ref={pb => {
                     this.overallProgressBar = pb;
                   }}
@@ -278,4 +342,6 @@ const mapStateToProps = state => ({
   segments: state.segments.segments
 });
 
-export default connect(mapStateToProps)(TimeDisplay);
+export default connect(mapStateToProps, {
+  toggleTimer
+})(TimeDisplay);

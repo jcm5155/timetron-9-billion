@@ -5,7 +5,7 @@ import {
   ADD_ROUTINE,
   SET_CURRENT_ROUTINE,
   UPDATE_ROUTINE,
-  SET_ORDER
+  TOGGLE_TIMER
 } from "./types";
 import { createMessage, returnErrors } from "./messages";
 import { tokenConfig } from "./auth";
@@ -78,5 +78,10 @@ export const setCurrentRoutine = id => async (dispatch, getState) => {
   }
 };
 
-// SET CURRENT SEGMENT ORDER
-export const setOrder = id => async (dispatch, getState) => {};
+// TOGGLE CURRENTLY RUNNING TIMER
+export const toggleTimer = trueOrFalse => dispatch => {
+  dispatch({
+    type: TOGGLE_TIMER,
+    payload: trueOrFalse
+  });
+};
