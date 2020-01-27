@@ -1,11 +1,13 @@
 import React, { Component } from "react";
 import { formatTime } from "../../utils/SharedFunctions";
+import { connect } from "react-redux";
+import { Table, Col } from "react-bootstrap";
 
 export class Splits extends Component {
   render() {
     return (
-      <div className="d-flex justify-content-center">
-        <table className="table table-striped">
+      <Col style={{ marginTop: 15 }}>
+        <Table striped bordered hover>
           <thead>
             <tr>
               <th>Split</th>
@@ -13,9 +15,8 @@ export class Splits extends Component {
             </tr>
           </thead>
           <tbody>
-            {this.props.splitTimes.map(split => {
-              return this.props.splitTimes.indexOf(split) ==
-                this.props.splitTimes.length - 1 ? (
+            {this.props.splits.map(split => {
+              return this.props.splits.indexOf(split) == this.props.splits.length - 1 ? (
                 <tr key={split}>
                   <td>{formatTime(split.as("seconds"))}</td>
                   <td> {formatTime(split.as("seconds"))}</td>
@@ -26,19 +27,21 @@ export class Splits extends Component {
                   <td>
                     {formatTime(
                       split.as("seconds") -
-                        this.props.splitTimes[this.props.splitTimes.indexOf(split) + 1].as(
-                          "seconds"
-                        )
+                        this.props.splits[this.props.splits.indexOf(split) + 1].as("seconds")
                     )}
                   </td>
                 </tr>
               );
             })}
           </tbody>
-        </table>
-      </div>
+        </Table>
+      </Col>
     );
   }
 }
 
-export default Splits;
+const mapStateToProps = state => ({
+  splits: state.stopwatch.splits
+});
+
+export default connect(mapStateToProps)(Splits);

@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { logout } from "../../actions/auth";
+import { Container, Navbar, Nav, Button } from "react-bootstrap";
 
 export class Header extends Component {
   static propTypes = {
@@ -14,66 +14,38 @@ export class Header extends Component {
     const { isAuthenticated, user } = this.props.auth;
 
     const authLinks = (
-      <ul className="navbar-nav ml-auto mt-2 mt-lg-0">
-        <span className="navbar-text mr-3">
+      <Nav className="ml-auto">
+        <Navbar.Text className="px-4">
           <strong>{user ? `${user.username}` : ""}</strong>
-        </span>
+        </Navbar.Text>
         <li className="nav-item">
-          <button
-            onClick={this.props.logout}
-            className="nav-link btn btn-info btn-sm text-light"
-          >
+          <Button variant="outline-secondary" onClick={this.props.logout}>
             Logout
-          </button>
+          </Button>
         </li>
-      </ul>
+      </Nav>
     );
 
     const guestLinks = (
-      <ul className="navbar-nav ml-auto mt-2 mt-lg-0">
-        <li className="nav-item">
-          <Link to="/register" className="nav-link">
-            Register
-          </Link>
-        </li>
-        <li className="nav-item">
-          <Link to="/login" className="nav-link">
-            Login
-          </Link>
-        </li>
-      </ul>
+      <Nav className="ml-auto">
+        <Nav.Link href="#/register">Register</Nav.Link>
+        <Nav.Link href="/#login">Login</Nav.Link>
+      </Nav>
     );
 
     return (
-      <nav className="navbar navbar-expand-sm navbar-light bg-light">
-        <div className="container">
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-toggle="collapse"
-            data-target="#navbarTogglerDemo01"
-            aria-controls="navbarTogglerDemo01"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span className="navbar-toggler-icon" />
-          </button>
-          <div className="collapse navbar-collapse" id="navbarTogglerDemo01">
-            <a className="navbar-brand" href="#">
-              TimeTron 9 Billion
-            </a>
-            <ul className="navbar-nav mr-auto mt-2 mt-lg-0">
-              <li className="nav-item">
-                <Link to="/stopwatch" className="nav-link">
-                  Stopwatch
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {isAuthenticated ? authLinks : guestLinks}
-        </div>
-      </nav>
+      <Navbar bg="light" expand="sm">
+        <Container>
+          <Navbar.Brand href="#">TimeTron 9 Billion</Navbar.Brand>
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="mr-auto">
+              <Nav.Link href="#/stopwatch">Stopwatch</Nav.Link>
+            </Nav>
+            {isAuthenticated ? authLinks : guestLinks}
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
     );
   }
 }

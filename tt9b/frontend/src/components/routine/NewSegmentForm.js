@@ -1,20 +1,16 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { addSegment } from "../../actions/segments";
-import { segmentFormSanitizer } from "../../utils/SharedFunctions";
+import { updateRoutine } from "../../actions/routines";
+import { addSegment, updateSegmentOrder } from "../../actions/segments";
+import { segmentFormSanitizer, sortSegmentsByOrder } from "../../utils/SharedFunctions";
 
 export class NewSegmentForm extends Component {
   state = {
     name: "",
     durationS: "",
     durationM: "",
-    durationH: "",
-    position: ""
-  };
-
-  static propTypes = {
-    addSegment: PropTypes.func.isRequired
+    durationH: ""
   };
 
   onChange = e => this.setState({ [e.target.name]: e.target.value });
@@ -27,13 +23,22 @@ export class NewSegmentForm extends Component {
       segmentFormSanitizer(durationS, "s") +
       segmentFormSanitizer(durationM, "m") +
       segmentFormSanitizer(durationH, "h");
-    const segment = {
+
+    const newSegment = this.props.addSegment({
       name,
       duration: duration,
-      position: this.props.segments.length + 1,
       parent: id
-    };
-    this.props.addSegment(segment);
+    });
+
+    const newOrderString = `${this.props.current_routine.order},${newSegment.id}`;
+
+    updateRoutine({
+      ...this.props.current_routine,
+      order: newOrderString
+    });
+
+    this.props.updateSegmentOrder(sortSegmentsByOrder(newOrderString, this.props.segments));
+
     this.setState({
       name: "",
       durationS: "",
@@ -46,7 +51,6 @@ export class NewSegmentForm extends Component {
     const { name, durationS, durationM, durationH } = this.state;
     return (
       <div className="card card-body mt-4 mb-4">
-        <h2>Add Segment</h2>
         <form onSubmit={this.onSubmit}>
           <div className="form-row">
             <div className="form-group">
@@ -108,7 +112,7 @@ export class NewSegmentForm extends Component {
           </div>
 
           <div className="form-group">
-            <button type="submit" className="btn btn-primary">
+            <button type="submit" className="btn btn-primary" data-dismiss="modal">
               Submit
             </button>
           </div>
@@ -124,4 +128,4 @@ const mapStateToProps = state => ({
   segments: state.segments.segments
 });
 
-export default connect(mapStateToProps, { addSegment })(NewSegmentForm);
+export default connect(mapStateToProps, { updateSegmentOrder, addSegment })(NewSegmentForm);

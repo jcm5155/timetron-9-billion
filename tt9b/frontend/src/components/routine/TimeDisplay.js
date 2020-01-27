@@ -1,8 +1,29 @@
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import moment from "moment";
+import styled from "styled-components";
 import { formatDisplay, formatTime, totalTime } from "../../utils/SharedFunctions";
+import { Container, Row, Col, Button } from "react-bootstrap";
 import PropTypes from "prop-types";
+
+const ProgressBar = styled.div`
+  position: relative;
+  height: 28px;
+  width: 100%;
+  border-radius: 25px;
+  border: 1px solid #333;
+  margin-top: 10px;
+`;
+
+const ProgressBarFiller = styled.div`
+  background: #1da598;
+  height: 100%;
+  border-radius: inherit;
+`;
+
+const MainDisplay = styled.div`
+  font-size: 8em;
+`;
 
 export class TimeDisplay extends Component {
   constructor(props) {
@@ -77,10 +98,11 @@ export class TimeDisplay extends Component {
       currentSegment: firstSeg
     });
     let tempTime = moment.duration(firstSeg.duration, "s");
-    this.displayMilliseconds.innerHTML = formatDisplay(tempTime, "ms");
-    this.displaySeconds.innerHTML = formatDisplay(tempTime, "s");
-    this.displayMinutes.innerHTML = formatDisplay(tempTime, "m");
-    this.displayHours.innerHTML = formatDisplay(tempTime, "h");
+    this.mainTimeDisplay.innerHTML = `${formatDisplay(tempTime, "h")}:${formatDisplay(
+      tempTime,
+      "m"
+    )}:${formatDisplay(tempTime, "s")}:${formatDisplay(tempTime, "ms")}
+    `;
 
     this.elapsedDisplay.innerHTML = `00s / ${formatTime(totalTime(this.props.segments), 0)}`;
     this.currentProgressBar.style.width = "0";
@@ -91,7 +113,7 @@ export class TimeDisplay extends Component {
     await this.setStateAsync({
       timerTarget: moment().add(this.state.timerLeft, "s", true)
     });
-    let timerInstance = setInterval(this.runTimer, 30);
+    let timerInstance = setInterval(this.runTimer, 32);
     this.setState({
       timerInstance: timerInstance,
       timerRunning: true
@@ -122,10 +144,14 @@ export class TimeDisplay extends Component {
 
   async displayTime() {
     const currentTime = moment.duration(this.state.timerTarget.diff(moment()));
-    this.displayMilliseconds.innerHTML = formatDisplay(currentTime, "ms");
-    this.displaySeconds.innerHTML = formatDisplay(currentTime, "s");
-    this.displayMinutes.innerHTML = formatDisplay(currentTime, "m");
-    this.displayHours.innerHTML = formatDisplay(currentTime, "h");
+
+    this.mainTimeDisplay.innerHTML = `
+    ${formatDisplay(currentTime, "h")}:${formatDisplay(currentTime, "m")}:${formatDisplay(
+      currentTime,
+      "s"
+    )}:${formatDisplay(currentTime, "ms")}
+    `;
+
     const totalElapsed =
       this.state.totalElapsed + this.state.currentSegment.duration - currentTime.as("seconds");
 
@@ -160,121 +186,88 @@ export class TimeDisplay extends Component {
       currentSegment: { name: "Job's Done!", duration: "0" },
       totalElapsed: tempTime
     });
+
+    this.mainTimeDisplay.innerHTML = "TT:9B:GG:EZ";
     this.elapsedDisplay.innerHTML = "(⌐■_■)";
-    this.displayHours.innerHTML = "TT";
-    this.displayMinutes.innerHTML = "9B";
-    this.displaySeconds.innerHTML = "GG";
-    this.displayMilliseconds.innerHTML = "EZ";
   }
 
   render() {
     return (
       <Fragment>
-        <div className="container text-center pt-2">
-          <h1>{this.state.currentSegment.name}</h1>
-        </div>
-        <div className="d-flex justify-content-sm-center">
-          <div className="d-flex flex-row">
-            <div>
-              <h1
-                className="display-1"
-                ref={dh => {
-                  this.displayHours = dh;
+        <Container style={{ textAlign: "center" }}>
+          <Row>
+            <Col>
+              <h1>{this.state.currentSegment.name}</h1>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <MainDisplay
+                ref={dt => {
+                  this.mainTimeDisplay = dt;
                 }}
               >
-                00
-              </h1>
-            </div>
-            <div>
-              <h1 className="display-1">:</h1>
-            </div>
-            <div>
+                00:00:00:00
+              </MainDisplay>
+            </Col>
+          </Row>
+
+          <Row>
+            <Col>
               <h1
-                className="display-1"
-                ref={dm => {
-                  this.displayMinutes = dm;
+                ref={s => {
+                  this.elapsedDisplay = s;
+                }}
+              ></h1>
+            </Col>
+          </Row>
+
+          <Row>
+            <Col>
+              {" "}
+              <Button
+                variant="primary"
+                style={{ margin: 4 }}
+                onClick={() => {
+                  this.startStopClick();
                 }}
               >
-                00
-              </h1>
-            </div>
-            <div>
-              <h1 className="display-1">:</h1>
-            </div>
-            <div>
-              <h1
-                className="display-1"
-                ref={ds => {
-                  this.displaySeconds = ds;
+                {" "}
+                Start/Stop
+              </Button>
+              <Button
+                variant="secondary"
+                style={{ margin: 4 }}
+                onClick={() => {
+                  this.resetClick();
                 }}
               >
-                00
-              </h1>
-            </div>
-            <div>
-              <h1 className="display-1">:</h1>
-            </div>
-            <div>
-              <h1
-                className="display-1"
-                ref={dms => {
-                  this.displayMilliseconds = dms;
-                }}
-              >
-                00
-              </h1>
-            </div>
-          </div>
-        </div>
+                {" "}
+                Reset
+              </Button>
+            </Col>
+          </Row>
 
-        <div className="d-flex justify-content-sm-center">
-          <h1
-            ref={s => {
-              this.elapsedDisplay = s;
-            }}
-          >
-            {}
-          </h1>
-        </div>
+          <Row>
+            <Col>
+              <ProgressBar>
+                <ProgressBarFiller
+                  ref={pB => {
+                    this.currentProgressBar = pB;
+                  }}
+                />
+              </ProgressBar>
 
-        <div className="d-flex justify-content-sm-center py-3">
-          <button
-            className="btn btn-primary mr-2"
-            onClick={() => {
-              this.startStopClick();
-            }}
-          >
-            {" "}
-            Start/Stop
-          </button>
-          <button
-            className="btn btn-secondary ml-2"
-            onClick={() => {
-              this.resetClick();
-            }}
-          >
-            {" "}
-            Reset
-          </button>
-        </div>
-
-        <div className="routine-progress-bar">
-          <div
-            className="routine-progress-bar-filler"
-            ref={pB => {
-              this.currentProgressBar = pB;
-            }}
-          />
-        </div>
-
-        <div className="routine-progress-bar">
-          <div
-            className="routine-progress-bar-filler"
-            ref={pb => {
-              this.overallProgressBar = pb;
-            }}
-          />
-        </div>
+              <ProgressBar>
+                <ProgressBarFiller
+                  ref={pb => {
+                    this.overallProgressBar = pb;
+                  }}
+                />
+              </ProgressBar>
+            </Col>
+          </Row>
+        </Container>
       </Fragment>
     );
   }
@@ -282,8 +275,7 @@ export class TimeDisplay extends Component {
 
 const mapStateToProps = state => ({
   current_routine: state.routines.current_routine,
-  segments: state.segments.segments,
-  order: state.routines.current_routine.order
+  segments: state.segments.segments
 });
 
-export default connect(mapStateToProps, {})(TimeDisplay);
+export default connect(mapStateToProps)(TimeDisplay);

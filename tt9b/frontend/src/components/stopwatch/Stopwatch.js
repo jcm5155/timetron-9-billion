@@ -2,7 +2,15 @@ import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
 import Splits from "./Splits";
+import styled from "styled-components";
+import { setSplit, clearSplits } from "../../actions/stopwatch";
 import { formatDisplay } from "../../utils/SharedFunctions";
+import { Container, Row, Col, Button } from "react-bootstrap";
+import { connect } from "react-redux";
+
+const MainDisplay = styled.div`
+  font-size: 8em;
+`;
 
 export class Stopwatch extends Component {
   constructor(props) {
@@ -19,8 +27,7 @@ export class Stopwatch extends Component {
       timerRunning: false,
       timeElapsed: null,
       timeFrom: null,
-      timerInstance: null,
-      splitTimes: []
+      timerInstance: null
     };
   }
 
@@ -40,7 +47,7 @@ export class Stopwatch extends Component {
   }
 
   // Handler for start/stop button click
-  startStopClick(e) {
+  startStopClick() {
     if (this.state.timerRunning) {
       this.stopTimer();
     } else {
@@ -49,26 +56,22 @@ export class Stopwatch extends Component {
   }
 
   // Resets component state
-  async resetClick(e) {
+  resetClick() {
     if (this.state.timerInstance) {
       clearInterval(this.state.timerInstance);
     }
-    await this.setStateAsync({
+    this.props.clearSplits();
+    this.setState({
       timerRunning: false,
       timeElapsed: null,
       timerInstance: null,
-      timeFrom: null,
-      splitTimes: []
+      timeFrom: null
     });
-    this.displayHours.innerHTML = "00";
-    this.displayMinutes.innerHTML = "00";
-    this.displaySeconds.innerHTML = "00";
-    this.displayMilliseconds.innerHTML = "00";
+    this.mainTimeDisplay.innerHTML = "00:00:00:00";
   }
 
   // Starts the timer
   async startTimer() {
-    let tempTimeElapsed = this.state.timeElapsed;
     await this.setStateAsync({
       timeFrom: moment(),
       timerRunning: true
@@ -89,7 +92,7 @@ export class Stopwatch extends Component {
     clearInterval(this.state.timerInstance);
   }
 
-  // Stores split times in component state
+  // Stores splits in application state
   splitClick() {
     if (this.state.timerRunning) {
       const split = moment.duration(
@@ -97,9 +100,7 @@ export class Stopwatch extends Component {
           .add(this.state.timeElapsed)
           .diff(this.state.timeFrom)
       );
-      this.setState(prevState => ({
-        splitTimes: [split, ...prevState.splitTimes]
-      }));
+      this.props.setSplit(split);
     }
   }
 
@@ -110,93 +111,69 @@ export class Stopwatch extends Component {
         .add(this.state.timeElapsed)
         .diff(this.state.timeFrom)
     );
-    this.displayMilliseconds.innerHTML = formatDisplay(currentTime, "ms");
-    this.displaySeconds.innerHTML = formatDisplay(currentTime, "s");
-    this.displayMinutes.innerHTML = formatDisplay(currentTime, "m");
-    this.displayHours.innerHTML = formatDisplay(currentTime, "h");
+    this.mainTimeDisplay.innerHTML = `
+    ${formatDisplay(currentTime, "h")}:${formatDisplay(currentTime, "m")}:${formatDisplay(
+      currentTime,
+      "s"
+    )}:${formatDisplay(currentTime, "ms")}
+    `;
   }
 
   render() {
     return (
       <Fragment>
-        <div className="d-flex justify-content-sm-center">
-          <div className="d-flex flex-row">
-            <div className="p-2">
-              <h1
-                className="display-1"
-                ref={dh => {
-                  this.displayHours = dh;
+        <Container style={{ textAlign: "center" }}>
+          <Row>
+            <Col>
+              <MainDisplay
+                ref={dt => {
+                  this.mainTimeDisplay = dt;
                 }}
-              ></h1>
-            </div>
-            <div className="p-2">
-              <h1 className="display-1">:</h1>
-            </div>
-            <div className="p-2">
-              <h1
-                className="display-1"
-                ref={dm => {
-                  this.displayMinutes = dm;
-                }}
-              ></h1>
-            </div>
-            <div className="p-2">
-              <h1 className="display-1">:</h1>
-            </div>
-            <div className="p-2">
-              <h1
-                className="display-1"
-                ref={ds => {
-                  this.displaySeconds = ds;
-                }}
-              ></h1>
-            </div>
-            <div className="p-2">
-              <h1 className="display-1">:</h1>
-            </div>
-            <div className="p-2">
-              <h1
-                className="display-1"
-                ref={dms => {
-                  this.displayMilliseconds = dms;
-                }}
-              ></h1>
-            </div>
-          </div>
-        </div>
-        <div className="d-flex justify-content-sm-center mb-3">
-          <button
-            className="btn btn-primary mx-2"
+              >
+                00:00:00:00
+              </MainDisplay>
+            </Col>
+          </Row>
+
+          <Button
+            variant="primary"
+            style={{ margin: 4 }}
             onClick={() => {
               this.startStopClick();
             }}
           >
             {" "}
             Start/Stop
-          </button>
-          <button
-            className="btn btn-secondary mx-2"
+          </Button>
+          <Button
+            variant="secondary"
+            style={{ margin: 4 }}
             onClick={() => {
               this.resetClick();
             }}
           >
             {" "}
             Reset
-          </button>
-          <button
-            className="btn btn-info mx-2"
+          </Button>
+          <Button
+            variant="info"
+            style={{ margin: 4 }}
             onClick={() => {
               this.splitClick();
             }}
           >
             {" "}
             Split
-          </button>
-        </div>
-        <Splits splitTimes={this.state.splitTimes} />
+          </Button>
+        </Container>
+
+        <Splits />
       </Fragment>
     );
   }
 }
 
-export default Stopwatch;
+export default connect(null, {
+  setSplit,
+  clearSplits
+})(Stopwatch);

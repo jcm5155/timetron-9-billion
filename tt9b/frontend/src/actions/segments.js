@@ -1,5 +1,5 @@
 import axios from "axios";
-import { GET_SEGMENTS, DELETE_SEGMENT, ADD_SEGMENT } from "./types";
+import { GET_SEGMENTS, DELETE_SEGMENT, ADD_SEGMENT, UPDATE_SEGMENT_ORDER } from "./types";
 import { createMessage, returnErrors } from "./messages";
 import { tokenConfig } from "./auth";
 
@@ -33,7 +33,7 @@ export const deleteSegment = id => (dispatch, getState) => {
 };
 
 // ADD SEGMENT
-export const addSegment = segment => (dispatch, getState) => {
+export const addSegment = segment => async (dispatch, getState) => {
   axios
     .post("/api/segments/", segment, tokenConfig(getState))
     .then(response => {
@@ -45,3 +45,9 @@ export const addSegment = segment => (dispatch, getState) => {
     })
     .catch(error => dispatch(returnErrors(error.response.data, error.response.status)));
 };
+
+// UPDATE SEGMENT ORDER
+export const updateSegmentOrder = segments => ({
+  type: UPDATE_SEGMENT_ORDER,
+  payload: segments
+});

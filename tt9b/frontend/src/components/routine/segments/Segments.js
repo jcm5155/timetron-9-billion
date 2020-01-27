@@ -1,34 +1,57 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import styled from "styled-components";
+import { Droppable } from "react-beautiful-dnd";
 
-import { getSegments, deleteSegment, addSegment } from "../../../actions/segments";
+import { updateSegmentOrder, deleteSegment } from "../../../actions/segments";
 import { updateRoutine } from "../../../actions/routines";
 
 import { DragDropContext } from "react-beautiful-dnd";
 import RoutineColumn from "./RoutineColumn";
 import { sortSegmentsByOrder } from "../../../utils/SharedFunctions";
 
+const DeleteDiv = styled.div`
+  margin-top: 10px;
+  border: 1px solid lightgrey;
+  border-radius: 2px;
+  text-align: center;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: ${props => (props.isDraggingOver ? "red" : "#002b36")};
+`;
+
 export class Segments extends Component {
   constructor(props) {
     super(props);
     this.onDragEnd = this.onDragEnd.bind(this);
+    this.onDragStart = this.onDragStart.bind(this);
+
     this.state = {
-      segments: this.props.segments
+      isDragging: false
     };
   }
+
   static propTypes = {
     current_routine: PropTypes.object.isRequired,
-    segments: PropTypes.array.isRequired
+    segments: PropTypes.array.isRequired,
+    updateRoutine: PropTypes.func.isRequired,
+    updateSegmentOrder: PropTypes.func.isRequired
   };
 
-  setStateAsync(state) {
-    return new Promise(resolve => {
-      this.setState(state, resolve);
+  onDragStart(result) {
+    this.setState({
+      isDragging: true
     });
   }
 
-  async onDragEnd(result) {
+  // Drag-n-drop reordering of segments
+  onDragEnd(result) {
+    this.setState({
+      isDragging: false
+    });
     const { destination, source, draggableId } = result;
     if (!destination) {
       return;
@@ -37,32 +60,58 @@ export class Segments extends Component {
       return;
     }
 
-    const newOrderArr = this.state.segments.map(segment => segment.id);
-    newOrderArr.splice(source.index, 1);
-    newOrderArr.splice(destination.index, 0, draggableId);
-    const newOrderString = newOrderArr.toString();
+    if (destination.droppableId === "deleteDiv") {
+      console.log("this is a deleter boi");
+      const filteredOrderArr = this.props.segments.filter(
+        segment => segment.id.toString() !== draggableId
+      );
+      const filteredOrderString = filteredOrderArr.toString();
 
-    const newSegmentOrder = sortSegmentsByOrder(newOrderString, this.state.segments);
+      this.props.deleteSegment(parseInt(draggableId));
 
-    this.props.updateRoutine({
-      ...this.props.current_routine,
-      order: newOrderString
-    });
+      this.props.updateRoutine({
+        ...this.props.current_routine,
+        order: filteredOrderString
+      });
 
-    this.setState({
-      ...this.state,
-      segments: newSegmentOrder
-    });
+      this.props.updateSegmentOrder(filteredOrderArr);
+    } else {
+      const newOrderArr = this.props.segments.map(segment => segment.id);
+      newOrderArr.splice(source.index, 1);
+      newOrderArr.splice(destination.index, 0, draggableId);
+      const newOrderString = newOrderArr.toString();
+      const newSegmentOrderArr = sortSegmentsByOrder(newOrderString, this.props.segments);
+
+      this.props.updateRoutine({
+        ...this.props.current_routine,
+        order: newOrderString
+      });
+
+      this.props.updateSegmentOrder(newSegmentOrderArr);
+    }
   }
 
   render() {
+    const { isDragging } = this.state;
+
     return (
-      <DragDropContext onDragEnd={this.onDragEnd}>
-        <RoutineColumn
-          current_routine={this.props.current_routine}
-          segments={this.props.segments}
-        />
-      </DragDropContext>
+      <Fragment>
+        <DragDropContext onDragEnd={this.onDragEnd} onDragStart={this.onDragStart}>
+          <Droppable droppableId="deleteDiv">
+            {(provided, snapshot) => (
+              <DeleteDiv
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+                isDraggingOver={snapshot.isDraggingOver}
+              >
+                {provided.placeholder}
+                {isDragging ? <h1>🗑️</h1> : <h1>{this.props.current_routine.name}</h1>}
+              </DeleteDiv>
+            )}
+          </Droppable>
+          <RoutineColumn />
+        </DragDropContext>
+      </Fragment>
     );
   }
 }
@@ -73,8 +122,7 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps, {
-  getSegments,
-  deleteSegment,
-  addSegment,
-  updateRoutine
+  updateRoutine,
+  updateSegmentOrder,
+  deleteSegment
 })(Segments);

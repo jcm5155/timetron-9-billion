@@ -1,4 +1,9 @@
-import { GET_SEGMENTS, DELETE_SEGMENT, ADD_SEGMENT } from "../actions/types.js";
+import {
+  GET_SEGMENTS,
+  DELETE_SEGMENT,
+  ADD_SEGMENT,
+  UPDATE_SEGMENT_ORDER
+} from "../actions/types.js";
 import { sortSegmentsByOrder } from "../utils/SharedFunctions";
 
 const initialState = {
@@ -12,17 +17,20 @@ export default function(state = initialState, action) {
         ...state,
         segments: sortSegmentsByOrder(action.current_routine_order, action.payload)
       };
+    case UPDATE_SEGMENT_ORDER:
+      return {
+        ...state,
+        segments: action.payload
+      };
     case DELETE_SEGMENT:
       return {
         ...state,
-        segments: state.segments.filter(segment => segment.id !== action.payload),
-        segment_order: sortSegmentsByOrder(action.current_routine_order, action.payload)
+        segments: state.segments.filter(segment => segment.id !== action.payload)
       };
     case ADD_SEGMENT:
       return {
         ...state,
-        segments: [...state.segments, action.payload],
-        segment_order: sortSegmentsByOrder(action.current_routine_order, action.payload)
+        segments: [...state.segments, action.payload]
       };
     default:
       return state;

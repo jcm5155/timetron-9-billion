@@ -4,11 +4,13 @@ import segments from "./segments";
 import errors from "./errors";
 import messages from "./messages";
 import auth from "./auth";
+import stopwatch from "./stopwatch";
 
 export default combineReducers({
-  routines,
-  segments,
+  auth,
   errors,
   messages,
-  auth
+  routines,
+  segments,
+  stopwatch
 });

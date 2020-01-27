@@ -1,41 +1,55 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import styled from "styled-components";
+import { connect } from "react-redux";
 import { Droppable } from "react-beautiful-dnd";
 import SegmentRow from "./SegmentRow";
 
-const Title = styled.h3`
-  padding: 8px;
-  border: 1px solid lightgrey;
-  border-radius: 2px;
-`;
+const SegmentContainer = styled.div`
+  padding: 3px;
+  height: 60vh;
+  overflow: scroll;
+  -webkit-transition: height 0.3s;
+  transition: height 0.3s;
 
-const Container = styled.div`
-  margin: 8px;
-  border: ;
+  &:hover {
+    height: 70vh;
+  }
 `;
 
 const SegmentList = styled.div`
   padding: 8px;
+  transition: background-color 0.2s ease;
+  background-color: #fdf6e3;
 `;
 
 export class RoutineColumn extends Component {
   render() {
     return (
-      <Container>
-        <Title>{this.props.current_routine.name}</Title>
-        <Droppable droppableId={this.props.current_routine.id.toString()}>
-          {provided => (
-            <SegmentList ref={provided.innerRef} {...provided.droppableProps}>
-              {this.props.segments.map((segment, index) => (
-                <SegmentRow key={segment.id} segment={segment} index={index} />
-              ))}
-              {provided.placeholder}
-            </SegmentList>
-          )}
-        </Droppable>
-      </Container>
+      <Fragment>
+        <SegmentContainer>
+          <Droppable droppableId={this.props.current_routine.id.toString()}>
+            {(provided, snapshot) => (
+              <SegmentList
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+                isDraggingOver={snapshot.isDraggingOver}
+              >
+                {this.props.segments.map((segment, index) => (
+                  <SegmentRow key={segment.id} segment={segment} index={index} />
+                ))}
+                {provided.placeholder}
+              </SegmentList>
+            )}
+          </Droppable>
+        </SegmentContainer>
+      </Fragment>
     );
   }
 }
 
-export default RoutineColumn;
+const mapStateToProps = state => ({
+  current_routine: state.routines.current_routine,
+  segments: state.segments.segments
+});
+
+export default connect(mapStateToProps)(RoutineColumn);
