@@ -1,13 +1,13 @@
 import "@babel/polyfill";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import { HashRouter as Router, Route, Switch, Redirect } from "react-router-dom";
+import Container from "react-bootstrap/Container";
+import { HashRouter as Router, Route } from "react-router-dom";
 import { loadUser } from "../actions/auth";
 import { Provider } from "react-redux";
 import { Provider as AlertProvider } from "react-alert";
 import React, { Component, Fragment } from "react";
 import ReactDOM from "react-dom";
-import store from "../store";
 
 import Alerts from "./layout/Alerts";
 import AlertTemplate from "react-alert-template-basic";
@@ -18,12 +18,11 @@ import PrivateRoute from "./common/PrivateRoute";
 import Register from "./accounts/Register";
 import RoutineDashboard from "./routine/Dashboard";
 import StopWatchDashboard from "./stopwatch/Dashboard";
+import store from "../store";
 
-import Container from "react-bootstrap/Container";
-
-// Alert Options
+// Sets duration and position for alerts
 const alertOptions = {
-  timeout: 3000,
+  timeout: 2000,
   position: "top center"
 };
 

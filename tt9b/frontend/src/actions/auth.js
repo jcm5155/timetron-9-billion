@@ -9,15 +9,12 @@ import {
   LOGIN_FAIL,
   LOGOUT_SUCCESS,
   REGISTER_SUCCESS,
-  REGISTER_FAIL,
-  CLEAR_ROUTINES
+  REGISTER_FAIL
 } from "./types";
 
-// CHECK TOKEN & LOAD USER
+// Checks authentication token and loads the user
 export const loadUser = () => (dispatch, getState) => {
-  // User Loading
   dispatch({ type: USER_LOADING });
-
   axios
     .get("/api/auth/user", tokenConfig(getState))
     .then(res => {
@@ -34,16 +31,15 @@ export const loadUser = () => (dispatch, getState) => {
     });
 };
 
-// LOGIN USER
+// Logs in the user
 export const login = (username, password) => dispatch => {
-  // Headers
+  // Builds header for request
   const config = {
     headers: {
       "Content-Type": "application/json"
     }
   };
 
-  // Request Body
   const body = JSON.stringify({ username, password });
 
   axios
@@ -62,16 +58,14 @@ export const login = (username, password) => dispatch => {
     });
 };
 
-// REGISTER USER
+// Registers new user
 export const register = ({ username, password, email }) => dispatch => {
-  // Headers
   const config = {
     headers: {
       "Content-Type": "application/json"
     }
   };
 
-  // Request Body
   const body = JSON.stringify({ username, email, password });
 
   axios
@@ -90,12 +84,11 @@ export const register = ({ username, password, email }) => dispatch => {
     });
 };
 
-// LOGOUT USER
+// Logs out the user
 export const logout = () => (dispatch, getState) => {
   axios
     .post("/api/auth/logout/", null, tokenConfig(getState))
     .then(res => {
-      dispatch({ type: CLEAR_ROUTINES });
       dispatch({
         type: LOGOUT_SUCCESS
       });
@@ -105,19 +98,16 @@ export const logout = () => (dispatch, getState) => {
     });
 };
 
-// Setup config with token - helper function
+// Helper function to add auth token to request header
 export const tokenConfig = getState => {
-  // Get token from state
   const token = getState().auth.token;
 
-  // Headers
   const config = {
     headers: {
       "Content-Type": "application/json"
     }
   };
 
-  // If token, add to headers config
   if (token) {
     config.headers["Authorization"] = `Token ${token}`;
   }

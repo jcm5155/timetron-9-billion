@@ -1,12 +1,12 @@
 import { SET_SPLIT, CLEAR_SPLITS } from "./types";
 
-// SET SPLIT
+// Creates a new time split
 export const setSplit = timeStamp => ({
   type: SET_SPLIT,
   payload: timeStamp
 });
 
-// CLEAR SPLITS
+// Clears all splits in the application state
 export const clearSplits = () => ({
   type: CLEAR_SPLITS
 });

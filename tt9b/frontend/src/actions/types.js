@@ -5,8 +5,8 @@ export const ADD_ROUTINE = "ADD_ROUTINE";
 export const SET_CURRENT_ROUTINE = "SET_CURRENT_ROUTINE";
 export const UPDATE_ROUTINE = "UPDATE_ROUTINE";
 export const SET_ORDER = "SET_ORDER";
-export const CLEAR_ROUTINES = "CLEAR_ROUTINES";
 export const TOGGLE_TIMER = "TOGGLE_TIMER";
+export const INCREMENT_PLAY_COUNTER = "INCREMENT_PLAY_COUNTER";
 
 // TimeSegment actions
 export const GET_SEGMENTS = "GET_SEGMENTS";
@@ -14,7 +14,7 @@ export const DELETE_SEGMENT = "DELETE_SEGMENT";
 export const ADD_SEGMENT = "ADD_SEGMENT";
 export const UPDATE_SEGMENT_ORDER = "UPDATE_SEGMENT_ORDER";
 
-//Error actions
+// Error actions
 export const GET_ERRORS = "GET_ERRORS";
 
 // Message actions

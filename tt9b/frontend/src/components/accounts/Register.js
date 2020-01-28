@@ -35,6 +35,7 @@ export class Register extends Component {
 
   onChange = e => this.setState({ [e.target.name]: e.target.value });
 
+  // TODO: change this styling over to react-bootstrap
   render() {
     if (this.props.isAuthenticated) {
       return <Redirect to="/" />;

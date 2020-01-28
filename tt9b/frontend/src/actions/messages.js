@@ -1,6 +1,6 @@
 import { CREATE_MESSAGE, GET_ERRORS } from "./types";
 
-// CREATE MESSAGE
+// Message creation for alerts
 export const createMessage = msg => {
   return {
     type: CREATE_MESSAGE,
@@ -8,7 +8,7 @@ export const createMessage = msg => {
   };
 };
 
-// RETURN ERRORS
+// Error creation for alerts
 export const returnErrors = (msg, status) => {
   return {
     type: GET_ERRORS,

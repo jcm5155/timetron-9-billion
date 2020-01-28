@@ -1,18 +1,18 @@
 import React, { Component } from "react";
-import { Link, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
-import PropTypes from "prop-types";
 import { login } from "../../actions/auth";
+import { Link, Redirect } from "react-router-dom";
+import PropTypes from "prop-types";
 
 export class Login extends Component {
-  state = {
-    username: "",
-    password: ""
-  };
-
   static propTypes = {
     login: PropTypes.func.isRequired,
     isAuthenticated: PropTypes.bool
+  };
+
+  state = {
+    username: "",
+    password: ""
   };
 
   onSubmit = e => {
@@ -22,6 +22,7 @@ export class Login extends Component {
 
   onChange = e => this.setState({ [e.target.name]: e.target.value });
 
+  // TODO: change this styling over to react-bootstrap
   render() {
     if (this.props.isAuthenticated) {
       return <Redirect to="/" />;

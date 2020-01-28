@@ -5,10 +5,8 @@ import styled from "styled-components";
 import { formatDisplay, formatTime, totalTime } from "../../utils/SharedFunctions";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import PropTypes from "prop-types";
+import { updateRoutine } from "../../actions/routines";
 
-// I independently have both a component boolean and an application state boolean for whether the timer is running.
-// For some reason the application state boolean isn't cooperating/updating fast enough (even when awaited) for the operations in the component state.
-// I'll figure this out later (probably).
 import { toggleTimer } from "../../actions/routines";
 
 const ProgressBar = styled.div`
@@ -52,6 +50,11 @@ export class TimeDisplay extends Component {
     this.timerComplete = this.timerComplete.bind(this);
     this.nextSegment = this.nextSegment.bind(this);
 
+    // I have both a component state boolean (this.state.timerRunning) and an application
+    // state boolean (state.timer_running) to represent if a timer is currently running.
+    // I did this because the application state boolean wasn't cooperating/updating fast enough for some
+    // operations that needed to be done in sequence. I will fix this and use only the application state boolean in the future.
+
     this.state = {
       timerRunning: false,
       timerIndex: 0,
@@ -59,7 +62,8 @@ export class TimeDisplay extends Component {
       timerInstance: null,
       timerLeft: null,
       totalElapsed: 0,
-      currentSegment: { name: "Add a timer to your routine!", duration: "0" }
+      currentSegment: { name: "Add a timer to your routine!", duration: "0" },
+      currentPlays: 0
     };
   }
 
@@ -74,6 +78,7 @@ export class TimeDisplay extends Component {
   }
   componentWillUnmount() {
     clearInterval(this.state.timerInstance);
+    const newPlays = this.props.current_routine.plays + this.state.currentPlays;
   }
 
   setStateAsync(state) {
@@ -92,6 +97,7 @@ export class TimeDisplay extends Component {
 
   async resetClick(e) {
     if (this.state.timerInstance) {
+      this.props.toggleTimer(false);
       clearInterval(this.state.timerInstance);
     }
     if (this.props.segments.length > 0) {
@@ -140,7 +146,6 @@ export class TimeDisplay extends Component {
       totalElapsed: 0,
       currentSegment: firstSeg
     });
-    this.props.toggleTimer(false);
     let tempTime = moment.duration(firstSeg.duration, "s");
     this.mainTimeDisplay.innerHTML = `${formatDisplay(tempTime, "h")}:${formatDisplay(
       tempTime,
@@ -214,8 +219,8 @@ export class TimeDisplay extends Component {
   }
 
   async nextSegment() {
-    let nextSegment = this.props.segments[this.state.timerIndex + 1];
-    let nextTimerIndex = this.state.timerIndex + 1;
+    const nextSegment = this.props.segments[this.state.timerIndex + 1];
+    const nextTimerIndex = this.state.timerIndex + 1;
     await this.setStateAsync({
       totalElapsed:
         this.state.totalElapsed + this.props.segments[this.state.timerIndex].duration,
@@ -227,10 +232,12 @@ export class TimeDisplay extends Component {
   }
 
   timerComplete() {
-    let tempTime = totalTime(this.props.segments);
+    const tempTime = totalTime(this.props.segments);
+    const newPlays = this.state.currentPlays + 1;
     this.setState({
       currentSegment: { name: "Job's Done!", duration: "0" },
-      totalElapsed: tempTime
+      totalElapsed: tempTime,
+      currentPlays: newPlays
     });
 
     this.mainTimeDisplay.innerHTML = "TT:9B:GG:EZ";
@@ -343,5 +350,6 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps, {
-  toggleTimer
+  toggleTimer,
+  updateRoutine
 })(TimeDisplay);

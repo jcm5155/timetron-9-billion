@@ -3,25 +3,27 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { addRoutine } from "../../actions/routines";
 
+// Form for adding a new routine for the current user.
 export class NewRoutineForm extends Component {
   state = {
     name: ""
   };
 
   static propTypes = {
-    addRoutine: PropTypes.func.isRequired
+    addRoutine: PropTypes.func.isRequired,
+    auth: PropTypes.object.isRequired
   };
 
   onChange = e => this.setState({ [e.target.name]: e.target.value });
 
+  // Handler for the form submit button
   onSubmit = e => {
     e.preventDefault();
     const { id } = this.props.auth.user;
     const { name } = this.state;
     const routine = {
       name: name,
-      author: id,
-      order: []
+      author: id
     };
     this.props.addRoutine(routine);
     this.setState({
@@ -29,6 +31,7 @@ export class NewRoutineForm extends Component {
     });
   };
 
+  // TODO: change this styling over to react-bootstrap
   render() {
     const { name } = this.state;
     return (

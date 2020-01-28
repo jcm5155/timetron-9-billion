@@ -9,7 +9,9 @@ import {
 } from "../../actions/routines";
 import { getSegments } from "../../actions/segments";
 import { Redirect } from "react-router-dom";
+import { Container, Row } from "react-bootstrap";
 
+// Displays all routines associated with current user
 export class Routines extends Component {
   constructor(props) {
     super(props);
@@ -48,7 +50,7 @@ export class Routines extends Component {
     await this.props.setCurrentRoutine(id);
     await this.props.getSegments(id);
 
-    // Set order for routines without a current order value
+    // This sets the order property for any routine that still has the default order property of ""
     if (this.props.current_routine.order == "" && this.props.segments.length > 0) {
       await this.props.updateRoutine({
         ...this.props.current_routine,
@@ -66,15 +68,14 @@ export class Routines extends Component {
       return <Redirect push to="/routine" />;
     }
     return (
-      <Fragment>
-        <div className="d-flex justify-content-sm-center py-2">
+      <Container>
+        <Row>
           <h2 className="text-center pt-2"> {this.props.auth.user.username}'s Routines</h2>
-        </div>
+        </Row>
         <table className="table table-striped">
           <thead>
             <tr>
               <th>Name</th>
-              <th>Date Created</th>
               <th>Total Time</th>
               <th>Plays</th>
               <th></th>
@@ -85,7 +86,6 @@ export class Routines extends Component {
             {this.props.routines.map(routine => (
               <tr key={routine.id}>
                 <td>{routine.name}</td>
-                <td>{routine.date_created}</td>
                 <td>NYI</td>
                 <td>{routine.plays}</td>
                 <td>
@@ -115,7 +115,7 @@ export class Routines extends Component {
             ))}
           </tbody>
         </table>
-      </Fragment>
+      </Container>
     );
   }
 }

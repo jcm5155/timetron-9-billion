@@ -3,7 +3,7 @@ import { GET_SEGMENTS, DELETE_SEGMENT, ADD_SEGMENT, UPDATE_SEGMENT_ORDER } from 
 import { createMessage, returnErrors } from "./messages";
 import { tokenConfig } from "./auth";
 
-// GET SEGMENTS
+// Gets segments associated with the current routine
 export const getSegments = id => async (dispatch, getState) => {
   try {
     const currentRoutineOrder = getState().routines.current_routine.order;
@@ -18,7 +18,7 @@ export const getSegments = id => async (dispatch, getState) => {
   }
 };
 
-// DELETE SEGMENT
+// Deletes a segment
 export const deleteSegment = id => (dispatch, getState) => {
   axios
     .delete(`/api/segments/${id}/`, tokenConfig(getState))
@@ -32,7 +32,7 @@ export const deleteSegment = id => (dispatch, getState) => {
     .catch(error => dispatch(returnErrors(error.response.data, error.response.status)));
 };
 
-// ADD SEGMENT
+// Adds a segment to the current routine
 export const addSegment = segment => async (dispatch, getState) => {
   axios
     .post("/api/segments/", segment, tokenConfig(getState))
@@ -46,7 +46,7 @@ export const addSegment = segment => async (dispatch, getState) => {
     .catch(error => dispatch(returnErrors(error.response.data, error.response.status)));
 };
 
-// UPDATE SEGMENT ORDER
+// Updates the segment order of the application state (not the current routine's order property)
 export const updateSegmentOrder = segments => ({
   type: UPDATE_SEGMENT_ORDER,
   payload: segments
