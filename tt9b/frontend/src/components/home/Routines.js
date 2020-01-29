@@ -1,5 +1,8 @@
-import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
+import { Container, Row } from "react-bootstrap";
+import { getSegments } from "../../actions/segments";
+import React, { Component, Fragment } from "react";
+import { Redirect } from "react-router-dom";
 import PropTypes from "prop-types";
 import {
   getRoutines,
@@ -7,16 +10,13 @@ import {
   setCurrentRoutine,
   updateRoutine
 } from "../../actions/routines";
-import { getSegments } from "../../actions/segments";
-import { Redirect } from "react-router-dom";
-import { Container, Row } from "react-bootstrap";
 
 // Displays all routines associated with current user
 export class Routines extends Component {
   constructor(props) {
     super(props);
     this.onSelectClick = this.onSelectClick.bind(this);
-    this.setStateAsync = this.setStateAsync.bind(this);
+
     this.state = {
       redirect: false
     };
@@ -24,10 +24,11 @@ export class Routines extends Component {
 
   static propTypes = {
     routines: PropTypes.array.isRequired,
-    getRoutines: PropTypes.func.isRequired,
+    auth: PropTypes.object.isRequired,
     deleteRoutine: PropTypes.func.isRequired,
-    setCurrentRoutine: PropTypes.func.isRequired,
-    getSegments: PropTypes.func.isRequired
+    getRoutines: PropTypes.func.isRequired,
+    getSegments: PropTypes.func.isRequired,
+    setCurrentRoutine: PropTypes.func.isRequired
   };
 
   componentDidMount() {
@@ -40,12 +41,7 @@ export class Routines extends Component {
     });
   }
 
-  setStateAsync(state) {
-    return new Promise(resolve => {
-      this.setState(state, resolve);
-    });
-  }
-
+  // Handler for button that selects a routine to view
   async onSelectClick(id) {
     await this.props.setCurrentRoutine(id);
     await this.props.getSegments(id);
@@ -58,11 +54,13 @@ export class Routines extends Component {
       });
     }
 
-    await this.setStateAsync({
+    // Handles redirect to view a single routine
+    this.setState({
       redirect: true
     });
   }
 
+  // TODO: change this styling over to react-bootstrap
   render() {
     if (this.state.redirect == true) {
       return <Redirect push to="/routine" />;

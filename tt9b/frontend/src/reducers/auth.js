@@ -16,6 +16,7 @@ const initialState = {
   user: null
 };
 
+// Reducer for auth actions
 export default function(state = initialState, action) {
   switch (action.type) {
     case USER_LOADING:

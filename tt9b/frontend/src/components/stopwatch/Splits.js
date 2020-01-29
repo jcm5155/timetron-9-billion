@@ -2,8 +2,13 @@ import React, { Component } from "react";
 import { formatTime } from "../../utils/SharedFunctions";
 import { connect } from "react-redux";
 import { Table, Col } from "react-bootstrap";
+import PropTypes from "prop-types";
 
+// Displays the lap splits for the stopwatch
 export class Splits extends Component {
+  static propTypes = {
+    splits: PropTypes.array.isRequired
+  };
   render() {
     return (
       <Col style={{ marginTop: 15 }}>

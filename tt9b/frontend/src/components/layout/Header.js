@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import { logout } from "../../actions/auth";
 import { Container, Navbar, Nav, Button } from "react-bootstrap";
 
+// Navbar with navigation links
 export class Header extends Component {
   static propTypes = {
     auth: PropTypes.object.isRequired,
@@ -13,6 +14,7 @@ export class Header extends Component {
   render() {
     const { isAuthenticated, user } = this.props.auth;
 
+    // Displayed if user is logged in
     const authLinks = (
       <Nav className="ml-auto">
         <Navbar.Text className="px-4">
@@ -26,6 +28,7 @@ export class Header extends Component {
       </Nav>
     );
 
+    // Displayed if user is not logged in
     const guestLinks = (
       <Nav className="ml-auto">
         <Nav.Link href="#/register">Register</Nav.Link>

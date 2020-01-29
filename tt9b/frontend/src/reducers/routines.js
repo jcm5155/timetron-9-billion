@@ -13,6 +13,7 @@ const initialState = {
   timer_running: false
 };
 
+// Reducer for routine actions
 export default function(state = initialState, action) {
   switch (action.type) {
     case GET_ROUTINES:

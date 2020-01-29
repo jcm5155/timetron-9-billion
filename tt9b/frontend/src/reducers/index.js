@@ -6,6 +6,7 @@ import messages from "./messages";
 import auth from "./auth";
 import stopwatch from "./stopwatch";
 
+// Root reducer for redux
 export default combineReducers({
   auth,
   errors,

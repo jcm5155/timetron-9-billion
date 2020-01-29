@@ -1,4 +1,4 @@
-// Sorts segments using a routine's order property
+// Sorts segments using a routine's order property. Accepts a comma-separated string and an array of segments
 export const sortSegmentsByOrder = (order, segments) => {
   const orderArr = order.split(",");
   return segments.sort((a, b) => {

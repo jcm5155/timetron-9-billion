@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import { register } from "../../actions/auth";
 import { createMessage } from "../../actions/messages";
 
+// New user registration form
 export class Register extends Component {
   state = {
     username: "",

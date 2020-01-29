@@ -23,12 +23,14 @@ const DeleteDiv = styled.div`
   background-color: ${props => (props.isDraggingOver ? "red" : "#002b36")};
 `;
 
+// Drag and drop rearrangement of time segments for the current routine
 export class Segments extends Component {
   constructor(props) {
     super(props);
     this.onDragEnd = this.onDragEnd.bind(this);
     this.onDragStart = this.onDragStart.bind(this);
 
+    // This boolean controls whether or not the user can currently drag/drop segments.
     this.state = {
       isDragging: false
     };
@@ -47,21 +49,24 @@ export class Segments extends Component {
     });
   }
 
-  // Drag-n-drop reordering of segments
+  // Handler for the end of a drag event
   onDragEnd(result) {
     this.setState({
       isDragging: false
     });
     const { destination, source, draggableId } = result;
+
+    // If a draggable was dropped over a valid droppable...
     if (!destination) {
       return;
     }
+    // If a draggable was dropped in the same spot as it was before...
     if (destination.droppableId === source.droppableId && destination.index === source.index) {
       return;
     }
 
+    // If a draggable was dropped over the "delete" droppable...
     if (destination.droppableId === "deleteDiv") {
-      console.log("this is a deleter boi");
       const filteredOrderArr = this.props.segments.filter(
         segment => segment.id.toString() !== draggableId
       );
@@ -75,7 +80,9 @@ export class Segments extends Component {
       });
 
       this.props.updateSegmentOrder(filteredOrderArr);
-    } else {
+    }
+    // If a draggable was dropped in the "routine" droppable...
+    else {
       const newOrderArr = this.props.segments.map(segment => segment.id);
       newOrderArr.splice(source.index, 1);
       newOrderArr.splice(destination.index, 0, draggableId);

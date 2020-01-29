@@ -3,6 +3,7 @@ import NewSegmentForm from "./NewSegmentForm";
 import UpdateRoutineForm from "./UpdateRoutineForm";
 import { Container, Row, Modal, Button, ButtonToolbar } from "react-bootstrap";
 
+// Modal layout for the new segment form
 function SegmentForm(props) {
   return (
     <Modal {...props} aria-labelledby="contained-modal-title-vcenter">
@@ -21,6 +22,7 @@ function SegmentForm(props) {
   );
 }
 
+// Modal layout for the update routine form
 function RoutineForm(props) {
   return (
     <Modal {...props} aria-labelledby="contained-modal-title-vcenter">
@@ -39,6 +41,7 @@ function RoutineForm(props) {
   );
 }
 
+// Buttons that show the modal forms
 function ModalForms(props) {
   const [segmentForm, setSegmentFormShow] = useState(false);
   const [routineForm, setRoutineFormShow] = useState(false);

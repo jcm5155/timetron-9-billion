@@ -22,6 +22,7 @@ const SegmentList = styled.div`
   background-color: #fdf6e3;
 `;
 
+// Droppable component for time segment rearrangement
 export class RoutineColumn extends Component {
   render() {
     return (

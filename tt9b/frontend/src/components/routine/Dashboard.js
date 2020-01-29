@@ -5,6 +5,7 @@ import ModalForms from "./ModalForms";
 
 import { Container, Row, Col } from "react-bootstrap";
 
+// Layout for "/routine"
 function Dashboard(props) {
   return (
     <Fragment>

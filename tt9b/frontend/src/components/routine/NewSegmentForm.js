@@ -5,7 +5,16 @@ import { updateRoutine } from "../../actions/routines";
 import { addSegment, updateSegmentOrder } from "../../actions/segments";
 import { segmentFormSanitizer, sortSegmentsByOrder } from "../../utils/SharedFunctions";
 
+// Form for making a new time segment
 export class NewSegmentForm extends Component {
+  static propTypes = {
+    auth: PropTypes.object.isRequired,
+    current_routine: PropTypes.object.isRequired,
+    segments: PropTypes.array.isRequired,
+    updateSegmentOrder: PropTypes.func.isRequired,
+    addSegment: PropTypes.func.isRequired
+  };
+
   state = {
     name: "",
     durationS: "",
@@ -19,6 +28,7 @@ export class NewSegmentForm extends Component {
     e.preventDefault();
     const { id } = this.props.current_routine;
     const { name, durationS, durationM, durationH } = this.state;
+    // Duration from the form inputs converted into seconds
     const duration =
       segmentFormSanitizer(durationS, "s") +
       segmentFormSanitizer(durationM, "m") +
@@ -47,6 +57,7 @@ export class NewSegmentForm extends Component {
     });
   };
 
+  // TODO: change this styling over to react-bootstrap
   render() {
     const { name, durationS, durationM, durationH } = this.state;
     return (

@@ -7,6 +7,7 @@ const initialState = {};
 
 const middleware = [thunk];
 
+// Store for redux
 const store = createStore(
   rootReducer,
   initialState,

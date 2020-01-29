@@ -3,13 +3,16 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { updateRoutine } from "../../actions/routines";
 
+// Form for updating the name of an existing routine
 export class UpdateRoutineForm extends Component {
   state = {
     name: ""
   };
 
   static propTypes = {
-    updateRoutine: PropTypes.func.isRequired
+    updateRoutine: PropTypes.func.isRequired,
+    auth: PropTypes.object.isRequired,
+    current_routine: PropTypes.object.isRequired
   };
 
   onChange = e => this.setState({ [e.target.name]: e.target.value });
@@ -29,6 +32,7 @@ export class UpdateRoutineForm extends Component {
     });
   };
 
+  // TODO: Update styling to use react-bootstrap
   render() {
     const { name } = this.state.name;
     return (

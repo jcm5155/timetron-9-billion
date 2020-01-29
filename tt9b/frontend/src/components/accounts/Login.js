@@ -4,6 +4,7 @@ import { login } from "../../actions/auth";
 import { Link, Redirect } from "react-router-dom";
 import PropTypes from "prop-types";
 
+// Login form
 export class Login extends Component {
   static propTypes = {
     login: PropTypes.func.isRequired,

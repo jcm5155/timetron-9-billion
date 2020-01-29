@@ -26,6 +26,7 @@ const alertOptions = {
   position: "top center"
 };
 
+// Routes and general layout
 class App extends Component {
   componentDidMount() {
     store.dispatch(loadUser());

@@ -4,6 +4,7 @@ const initialState = {
   splits: []
 };
 
+// Reducer for stopwatch actions
 export default function(state = initialState, action) {
   switch (action.type) {
     case SET_SPLIT:

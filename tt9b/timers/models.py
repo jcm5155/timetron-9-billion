@@ -3,6 +3,7 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator
 
+
 class TimeRoutine(models.Model):
     name = models.CharField(max_length=100)
     date_created = models.DateTimeField(default=timezone.now)

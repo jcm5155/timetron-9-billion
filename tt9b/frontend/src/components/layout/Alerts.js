@@ -3,6 +3,7 @@ import { withAlert } from "react-alert";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
+// Displays alerts when specific actions are made
 export class Alerts extends Component {
   static propTypes = {
     error: PropTypes.object.isRequired,
@@ -13,10 +14,9 @@ export class Alerts extends Component {
     const { error, alert, message } = this.props;
     if (error !== previousProps.error) {
       if (error.msg.name) alert.error(`Name: ${error.msg.name.join()}`);
-      if (error.msg.message)
-        alert.error(`Message: ${error.msg.message.join()}`);
+      if (error.msg.message) alert.error(`Message: ${error.msg.message.join()}`);
     }
-
+    // Kind of sloppy way of displaying the correct popup message. I will either refactor this or just remove it entirely later
     if (message !== previousProps.message) {
       if (message.routineDelete) alert.success(message.routineDelete);
       if (message.routineAdd) alert.success(message.routineAdd);

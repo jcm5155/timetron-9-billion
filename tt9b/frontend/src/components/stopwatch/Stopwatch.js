@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from "react";
-import PropTypes from "prop-types";
 import moment from "moment";
 import Splits from "./Splits";
 import styled from "styled-components";
@@ -7,11 +6,13 @@ import { setSplit, clearSplits } from "../../actions/stopwatch";
 import { formatDisplay } from "../../utils/SharedFunctions";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { connect } from "react-redux";
+import PropTypes from "prop-types";
 
 const MainDisplay = styled.div`
   font-size: 8em;
 `;
 
+// Main display and logic for "/stopwatch"
 export class Stopwatch extends Component {
   constructor(props) {
     super(props);
@@ -30,6 +31,10 @@ export class Stopwatch extends Component {
       timerInstance: null
     };
   }
+  static propTypes = {
+    setSplit: PropTypes.func.isRequired,
+    clearSplits: PropTypes.func.isRequired
+  };
 
   componentDidMount() {
     this.resetClick();
@@ -82,7 +87,7 @@ export class Stopwatch extends Component {
     });
   }
 
-  // Stops the timer and stores total time elapsed in component state
+  // Stops the timer
   async stopTimer() {
     let tempTimeElapsed = this.state.timeElapsed + moment().diff(this.state.timeFrom);
     await this.setStateAsync({
@@ -92,7 +97,7 @@ export class Stopwatch extends Component {
     clearInterval(this.state.timerInstance);
   }
 
-  // Stores splits in application state
+  // Handler for split button
   splitClick() {
     if (this.state.timerRunning) {
       const split = moment.duration(

@@ -4,6 +4,7 @@ import { formatTime } from "../../../utils/SharedFunctions";
 import { Draggable } from "react-beautiful-dnd";
 import { connect } from "react-redux";
 
+// Draggable component for time segment rearrangement
 export class SegmentRow extends Component {
   render() {
     const Container = styled.div`
