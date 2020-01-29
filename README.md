@@ -12,21 +12,21 @@
   ##### A normal stopwatch!
   ![Run the stopwatch](https://media.giphy.com/media/gi9hso4A5uxf1vOlKY/giphy.gif)
   
-  Requirements
+  Requirements.
   ----
   * Python 3.7
   * npm
   
-  Installation
+  Installation.
   ----
   From the root of the repository:
-  1. `pipenv install` - Installs dependencies listed in `Pipfile`
-  2. `pipenv shell` - Starts the virtual environment shell
-  3. `npm install` - Installs dependencies listed in `package.json`
-  4. `npm run dev` - Builds `main.js` via webpack*
-  5. `cd tt9b` - Navigate to the directory that contains `manage.py`
-  5. `python manage.py migrate` - Applies migrations for Django
-  6. `python manage.py runserver` - Starts the development server (default port is `8000`)
+  1. `pipenv install` - Installs dependencies listed in `Pipfile`.
+  2. `pipenv shell` - Starts the virtual environment shell.
+  3. `npm install` - Installs dependencies listed in `package.json`.
+  4. `npm run dev` - Builds `main.js` via webpack.*
+  5. `cd tt9b` - Navigate to the directory that contains `manage.py`.
+  5. `python manage.py migrate` - Applies migrations for the database.
+  6. `python manage.py runserver` - Starts the development server (default port is `8000`).
   
    \* (NOTE: Older versions of Node will sometimes produce `Error: Package exports for '{filepath}' do not define a '.' subpath`. Please update Node to resolve this error.)
   
