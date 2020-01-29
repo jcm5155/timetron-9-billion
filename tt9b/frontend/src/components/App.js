@@ -4,6 +4,7 @@ import "bootswatch/dist/solar/bootstrap.min.css";
 import Container from "react-bootstrap/Container";
 import { HashRouter as Router, Route } from "react-router-dom";
 import { loadUser } from "../actions/auth";
+import Favicon from "react-favicon";
 import { Provider } from "react-redux";
 import { Provider as AlertProvider } from "react-alert";
 import React, { Component, Fragment } from "react";
@@ -37,6 +38,7 @@ class App extends Component {
         <AlertProvider template={AlertTemplate} {...alertOptions}>
           <Router>
             <Fragment>
+              <Favicon url="http://www.iconj.com/ico/s/j/sjgskhqt4w.ico" />
               <Header />
               <Alerts />
               <Container>
