@@ -20,7 +20,7 @@ const DeleteDiv = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: ${props => (props.isDraggingOver ? "red" : "#002b36")};
+  background-color: ${props => (props.isDraggingOver ? "red" : "")};
 `;
 
 // Drag and drop rearrangement of time segments for the current routine
