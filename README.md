@@ -3,14 +3,15 @@
   Create custom countdown timer “segments” that can be chained together into "routines” which allow for the precise tracking of larger lengths of time. 
   Run a time routine in the background and let it keep you on track while you study, practice your musical instrument, run your next meeting etc.
   
-  ![Run your routine](https://media.giphy.com/media/iDUZ7jl65r1ojyaH7P/giphy.gif)
   ##### Run your routine!
-  
+  ![Run your routine](https://media.giphy.com/media/iDUZ7jl65r1ojyaH7P/giphy.gif)
+
+   ##### Edit your routine!
   ![Edit your routine](https://media.giphy.com/media/hSLn5FPLsQwT2lywjV/giphy.gif)
-  ##### Edit your routine!
-  
-  ![Run the stopwatch](https://media.giphy.com/media/gi9hso4A5uxf1vOlKY/giphy.gif)
+ 
   ##### A normal stopwatch!
+  ![Run the stopwatch](https://media.giphy.com/media/gi9hso4A5uxf1vOlKY/giphy.gif)
+  
 
   The tech.
   ----
