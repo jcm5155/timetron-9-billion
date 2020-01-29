@@ -1,4 +1,4 @@
-# TimeTron 9 Billion
+# TT9B
  ### Make timed “splits” for your life.
   Create custom countdown timer “segments” that can be chained together into "routines” which allow for the precise tracking of larger lengths of time. 
   Run a time routine in the background and let it keep you on track while you study, practice your musical instrument, run your next meeting etc.
@@ -12,8 +12,8 @@
 
   Notes.
   ----
-  This is my first time using any of these technologies/frameworks. I tried my best, but if you see anything 
-  glaringly ignorant (especially regarding the application's structure/organization) and if you have the time or desire, please let me know how I can be better!
+  This is my first time using any of these technologies/frameworks. If you see anything 
+  which can be vastly improved (especially regarding the application's structure/organization) and if you have the time or desire, please let me know how I can be better!
   
   ----
   
