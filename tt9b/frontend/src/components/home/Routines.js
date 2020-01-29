@@ -67,8 +67,8 @@ export class Routines extends Component {
     }
     return (
       <Container>
-        <Row>
-          <h2 className="text-center pt-2"> {this.props.auth.user.username}'s Routines</h2>
+        <Row className="justify-content-md-center">
+          <h2 className="p-2"> {this.props.auth.user.username}'s Routines</h2>
         </Row>
         <table className="table table-striped">
           <thead>

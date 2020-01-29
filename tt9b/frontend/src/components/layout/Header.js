@@ -39,7 +39,7 @@ export class Header extends Component {
     return (
       <Navbar bg="light" expand="sm">
         <Container>
-          <Navbar.Brand href="#">TimeTron 9 Billion</Navbar.Brand>
+          <Navbar.Brand href="#">TT9B</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="mr-auto">
