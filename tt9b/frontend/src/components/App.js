@@ -1,5 +1,5 @@
 import "@babel/polyfill";
-import "bootstrap/dist/css/bootstrap.min.css";
+import "bootswatch/dist/solar/bootstrap.min.css";
 
 import Container from "react-bootstrap/Container";
 import { HashRouter as Router, Route } from "react-router-dom";

@@ -23,6 +23,7 @@
   "dependencies": {
     "axios": "^0.19.1",
     "bootstrap": "^4.4.1",
+    "bootswatch": "^4.4.1",
     "css-loader": "^3.4.2",
     "moment": "^2.24.0",
     "prop-types": "^15.7.2",
