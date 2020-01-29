@@ -37,11 +37,6 @@
   Key dependencies include thunk, momentjs, react-beautiful-dnd, react-bootstrap
   #### Django
   Key dependencies include rest_framework, knox
-
-  Notes.
-  ----
-  This is my first time using any of these technologies/frameworks. If you see anything 
-  which can be vastly improved (especially regarding the application's structure/organization) and if you have the time or desire, please let me know how I can be better!
   
   ----
   
