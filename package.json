@@ -8,6 +8,7 @@
   },
   "main": "index.js",
   "scripts": {
+      "webpack": "webpack",
     "dev": "webpack --mode development ./tt9b/frontend/src/index.js --output ./tt9b/frontend/static/frontend/main.js",
     "build": "webpack --mode production ./tt9b/frontend/src/index.js --output ./tt9b/frontend/static/frontend/main.js"
   },
