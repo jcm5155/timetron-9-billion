@@ -83,7 +83,7 @@ WSGI_APPLICATION = 'tt9b.wsgi.application'
 
 
 DATABASES = {}
-DATABASES['default'] = dj_database_url.config(conn_max_age=600)
+DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True))
 
 
 # Password validation
@@ -124,7 +124,7 @@ USE_TZ = True
 # Configure app for Heroku deployment
 django_heroku.settings(locals())
 
-del DATABASES['default']['OPTIONS']['sslmode']
+# del DATABASES['default']['OPTIONS']['sslmode']
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
