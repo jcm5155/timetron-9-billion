@@ -1,5 +1,6 @@
 node_modules
 .vscode
+.env
 
 # OS generated files #
 ######################
@@ -128,4 +129,4 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# End of https://www.gitignore.io/api/django
+# End of https://www.gitignore.io/api/django.env

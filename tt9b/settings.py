@@ -1,9 +1,15 @@
 import os
 import django_heroku
 import psycopg2
+import dj_database_url
+import dotenv
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+dotenv_file = os.path.join(BASE_DIR, ".env")
+if os.path.isfile(dotenv_file):
+    dotenv.load_dotenv(dotenv_file)
 
 
 # Quick-start development settings - unsuitable for production
@@ -16,7 +22,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'Optional default value')
 DEBUG = False
 
 # ALLOWED_HOSTS = ['tt9b.herokuapp.com']
-ALLOWED_HOSTS = ['tt9b.herokuapp.com']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -76,16 +82,8 @@ WSGI_APPLICATION = 'tt9b.wsgi.application'
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'tt9b',
-        'USER': 'tt9buser',
-        'PASSWORD': 'password',
-        'HOST': 'localhost',
-        'PORT': '',
-    }
-}
+DATABASES = {}
+DATABASES['default'] = dj_database_url.config(conn_max_age=600)
 
 
 # Password validation
@@ -121,11 +119,12 @@ USE_L10N = True
 USE_TZ = True
 
 
-import dj_database_url
-DATABASES['default'] = dj_database_url.config(conn_max_age=600)
+
 
 # Configure app for Heroku deployment
 django_heroku.settings(locals())
+
+del DATABASES['default']['OPTIONS']['sslmode']
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
