@@ -9,7 +9,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "webpack --mode development ./frontend/src/index.js --output ./tt9b/frontend/static/frontend/main.js",
-    "build": "webpack --mode production ./frontend/src/index.js --output ./tt9b/frontend/static/frontend/main.js"  },
+    "build": "webpack --mode production ./frontend/src/index.js --output ./frontend/static/frontend/main.js"  },
   "keywords": [],
   "author": "",
   "license": "ISC",

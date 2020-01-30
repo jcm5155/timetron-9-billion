@@ -133,9 +133,7 @@ STATIC_URL = '/static/'
 
 # Place static in the same location as webpack build files
 STATIC_ROOT = os.path.join(BASE_DIR, 'build', 'static')
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'tt9b/build/static')
-]
+STATICFILES_DIRS = []
 
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 MEDIA_URL = '/media/'
