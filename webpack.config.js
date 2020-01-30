@@ -1,5 +1,5 @@
 module.exports = {
-  entry: "./frontend/src/index.js",
+  entry: "./tt9b/frontend/src/index.js",
   module: {
     rules: [
       {
