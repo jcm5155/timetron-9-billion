@@ -1,6 +1,6 @@
 import os
 import django_heroku
-import dj_database_url
+
 import psycopg2
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -76,11 +76,16 @@ WSGI_APPLICATION = 'tt9b.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-DATABASE_URL = os.environ['DATABASE_URL']
-conn = psycopg2.connect(DATABASE_URL, sslmode='require')
-DATABASES = {}
-DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
 
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME':'redb',
+        'USER': 'postgres',
+        'PASSWORD':'admin',
+        'HOST': 'localhost'
+    }
+}
 
 
 # Password validation
@@ -115,6 +120,9 @@ USE_L10N = True
 
 USE_TZ = True
 
+
+import dj_database_url
+DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
 
 # Configure app for Heroku deployment
 django_heroku.settings(locals())
