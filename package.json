@@ -1,7 +1,11 @@
 {
   "name": "tt9b",
   "version": "1.0.0",
-  "description": "",
+  "description": "A timer app",
+  "engines": {
+    "node": "13.x",
+    "npm": "6.x"
+  },
   "main": "index.js",
   "scripts": {
     "dev": "webpack --mode development ./tt9b/frontend/src/index.js --output ./tt9b/frontend/static/frontend/main.js",
