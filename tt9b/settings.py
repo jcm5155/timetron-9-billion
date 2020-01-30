@@ -79,11 +79,7 @@ WSGI_APPLICATION = 'tt9b.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME':'redb',
-        'USER': 'postgres',
-        'PASSWORD':'admin',
-        'HOST': 'localhost'
+        'ENGINE': 'django.db.backends.postgresql'
     }
 }
 
