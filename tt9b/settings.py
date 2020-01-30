@@ -1,6 +1,5 @@
 import os
 import django_heroku
-
 import psycopg2
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -79,7 +78,12 @@ WSGI_APPLICATION = 'tt9b.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql'
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'tt9b',
+        'USER': 'tt9buser',
+        'PASSWORD': 'password',
+        'HOST': 'localhost',
+        'PORT': '',
     }
 }
 
@@ -129,9 +133,9 @@ django_heroku.settings(locals())
 STATIC_URL = '/static/'
 
 # Place static in the same location as webpack build files
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'build', 'static')
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'tt9b/static')
+    os.path.join(BASE_DIR, 'tt9b/build/static')
 ]
 
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
