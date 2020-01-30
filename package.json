@@ -8,9 +8,8 @@
   },
   "main": "index.js",
   "scripts": {
-    "dev": "webpack ./tt9b/frontend/src/index.js --output ./tt9b/frontend/static/frontend/main.js --mode development",
-    "build": "webpack ./tt9b/frontend/src/index.js --output ./tt9b/frontend/static/frontend/main.js --mode production"
-  },
+    "dev": "webpack --mode development ./tt9b/frontend/src/index.js --output ./tt9b/frontend/static/frontend/main.js",
+    "build": "webpack --mode production ./tt9b/frontend/src/index.js --output ./tt9b/frontend/static/frontend/main.js"  },
   "keywords": [],
   "author": "",
   "license": "ISC",
