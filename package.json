@@ -1,12 +1,15 @@
 {
   "name": "tt9b",
-  "version": "1.0.0",
-  "description": "",
+  "version": "1.0.1",
+  "description": "A timer app",
+  "engines": {
+    "node": "13.5.0",
+    "npm": "6.13.6"
+  },
   "main": "index.js",
   "scripts": {
-    "dev": "webpack --mode development ./tt9b/frontend/src/index.js --output ./tt9b/frontend/static/frontend/main.js",
-    "build": "webpack --mode production ./tt9b/frontend/src/index.js --output ./tt9b/frontend/static/frontend/main.js"
-  },
+    "dev": "webpack --mode development ./frontend/src/index.js --output ./tt9b/frontend/static/frontend/main.js",
+    "build": "webpack --mode production ./frontend/src/index.js --output ./frontend/static/frontend/main.js"  },
   "keywords": [],
   "author": "",
   "license": "ISC",

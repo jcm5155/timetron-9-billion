@@ -9,6 +9,13 @@ verify_ssl = true
 django = "*"
 djangorestframework = "*"
 django-rest-knox = "*"
+gunicorn = "*"
+whitenoise = "*"
+django-heroku = "*"
+psycopg2 = "*"
+dj-database-url = "*"
+psycopg2-binary = "*"
+python-dotenv = "*"
 
 [requires]
 python_version = "3.7"

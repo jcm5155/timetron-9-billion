@@ -1,4 +1,7 @@
+var path = require("path");
 module.exports = {
+  entry: "./tt9b/frontend/src/index.js",
+  context: path.resolve(__dirname, "tt9b"),
   module: {
     rules: [
       {
