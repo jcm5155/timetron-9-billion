@@ -3,7 +3,7 @@ import moment from "moment";
 import Splits from "./Splits";
 import styled from "styled-components";
 import { setSplit, clearSplits } from "../../actions/stopwatch";
-import { formatDisplay } from "../../utils/SharedFunctions";
+import { formatTime } from "../../utils/SharedFunctions";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -33,7 +33,8 @@ export class Stopwatch extends Component {
   }
   static propTypes = {
     setSplit: PropTypes.func.isRequired,
-    clearSplits: PropTypes.func.isRequired
+    clearSplits: PropTypes.func.isRequired,
+    formatTime: PropTypes.func.isRequired
   };
 
   componentDidMount() {
@@ -72,7 +73,7 @@ export class Stopwatch extends Component {
       timerInstance: null,
       timeFrom: null
     });
-    this.mainTimeDisplay.innerHTML = "00:00:00:00";
+    this.mainTimeDisplay.innerHTML = "00:00:00.000";
   }
 
   // Starts the timer
@@ -117,11 +118,7 @@ export class Stopwatch extends Component {
         .diff(this.state.timeFrom)
     );
     this.mainTimeDisplay.innerHTML = `
-    ${formatDisplay(currentTime, "h")}:${formatDisplay(currentTime, "m")}:${formatDisplay(
-      currentTime,
-      "s"
-    )}:${formatDisplay(currentTime, "ms")}
-    `;
+    ${formatTime(currentTime, "stopwatch")}`;
   }
 
   render() {
@@ -135,7 +132,7 @@ export class Stopwatch extends Component {
                   this.mainTimeDisplay = dt;
                 }}
               >
-                00:00:00:00
+                00:00:00.000
               </MainDisplay>
             </Col>
           </Row>
@@ -180,5 +177,6 @@ export class Stopwatch extends Component {
 
 export default connect(null, {
   setSplit,
-  clearSplits
+  clearSplits,
+  formatTime
 })(Stopwatch);

@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { formatTime } from "../../../utils/SharedFunctions";
 import { Draggable } from "react-beautiful-dnd";
 import { connect } from "react-redux";
+import moment from "moment";
 
 // Draggable component for time segment rearrangement
 export class SegmentRow extends Component {
@@ -40,7 +41,9 @@ export class SegmentRow extends Component {
           >
             <Col>
               <Row>{this.props.segment.name}</Row>
-              <Row>{formatTime(this.props.segment.duration, 0)}</Row>
+              <Row>
+                {formatTime(moment.duration(this.props.segment.duration, "s"), "secondary", 0)}
+              </Row>
             </Col>
           </Container>
         )}

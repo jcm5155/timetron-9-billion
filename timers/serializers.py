@@ -6,7 +6,7 @@ class RoutineSerializer(serializers.ModelSerializer):
     class Meta:
         model = TimeRoutine
         fields = '__all__'
-        read_only_fields = ('date_created', 'plays')
+        read_only_fields = ('date_created',)
 
 class SegmentSerializer(serializers.ModelSerializer):
     class Meta:
