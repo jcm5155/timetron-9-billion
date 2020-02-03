@@ -10,6 +10,7 @@ class TimeRoutine(models.Model):
     author = models.ForeignKey(User, related_name="routines", on_delete=models.CASCADE)
     plays = models.IntegerField(default=0)
     order = models.CharField(max_length=500, default="")
+    total_duration = models.IntegerField(default=0)
 
     def __str__(self):
         return f"{self.name} by {self.author}."

@@ -91,17 +91,36 @@ export class TimeDisplay extends Component {
     }
   }
 
+  // Using unmount to apply any changes made to the database
   async componentWillUnmount() {
     clearInterval(this.state.timerInstance);
     this.props.toggleTimer(false);
 
-    const newOrderString = this.props.segments.map(seg => seg.id).toString();
+    if (this.props.segments.length > 0) {
+      // Builds new string for order prop
+      const newOrderString = this.props.segments.map(seg => seg.id).toString();
 
-    await this.props.updateRoutine({
-      ...this.props.current_routine,
-      plays: this.props.current_routine.plays + this.state.currentPlays,
-      order: newOrderString
-    });
+      // Calculates new value for total_duration prop
+      const totalDuration = this.props.segments
+        .map(seg => seg.duration)
+        .reduce((accum, curr) => accum + curr);
+
+      // Apply changes to the database
+      await this.props.updateRoutine({
+        ...this.props.current_routine,
+        plays: this.props.current_routine.plays + this.state.currentPlays,
+        order: newOrderString,
+        total_duration: totalDuration
+      });
+    } else {
+      // Set order and total_duration back to default if no segments exist
+      await this.props.updateRoutine({
+        ...this.props.current_routine,
+        plays: this.props.current_routine.plays + this.state.currentPlays,
+        order: ",",
+        total_duration: 0
+      });
+    }
   }
 
   // This is kind of a hack-y workaround so that I can await component state changes.

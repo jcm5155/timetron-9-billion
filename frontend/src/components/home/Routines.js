@@ -6,6 +6,8 @@ import Button from "react-bootstrap/Button";
 import { getSegments } from "../../actions/segments";
 import React, { Component, Fragment } from "react";
 import { Redirect } from "react-router-dom";
+import { formatTime } from "../../utils/SharedFunctions";
+import moment from "moment";
 import PropTypes from "prop-types";
 import {
   getRoutines,
@@ -77,8 +79,9 @@ export class Routines extends Component {
           <thead>
             <tr>
               <th>Name</th>
-              <th>Segments</th>
               <th>Plays</th>
+              <th>Segments</th>
+              <th>Total Duration</th>
               <th></th>
             </tr>
           </thead>
@@ -86,8 +89,13 @@ export class Routines extends Component {
             {this.props.routines.map(routine => (
               <tr key={routine.id}>
                 <td>{routine.name}</td>
-                <td>{routine.order == "" ? "0" : routine.order.split(",").length}</td>
                 <td>{routine.plays}</td>
+                <td>{routine.order == "" ? "0" : routine.order.split(",").length}</td>
+                <td>
+                  {routine.total_duration == 0
+                    ? "0s"
+                    : formatTime(moment.duration(routine.total_duration, "s"), "secondary")}
+                </td>
                 <td>
                   <Button
                     onClick={() => {
