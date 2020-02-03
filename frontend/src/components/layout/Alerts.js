@@ -24,11 +24,14 @@ export class Alerts extends Component {
       }
     }
     if (message !== previousProps.message) {
-      if (message.routineDelete) alert.success(message.routineDelete);
-      if (message.routineAdd) alert.success(message.routineAdd);
-      if (message.segmentDelete) alert.success(message.segmentDelete);
-      if (message.segmentAdd) alert.success(message.segmentAdd);
-      if (message.passwordNotMatch) alert.error(message.passwordNotMatch);
+      for (let [k, v] of Object.entries(message)) {
+        console.log(`${k}: ${v}`);
+        if (k != "passwordNotMatch") {
+          alert.success(v);
+        } else {
+          alert.error(v);
+        }
+      }
     }
   }
   render() {
