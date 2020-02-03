@@ -10,14 +10,14 @@ export class Alerts extends Component {
     message: PropTypes.object.isRequired
   };
 
-  // Kind of sloppy way of displaying the correct popup message. I will either refactor this or just remove it entirely later
+  // Displays error messages as alerts
   componentDidUpdate(previousProps) {
     const { error, alert, message } = this.props;
     if (error !== previousProps.error) {
-      if (error.msg.name) alert.error(`Name: ${error.msg.name.join()}`);
-      if (error.msg.message) alert.error(`Message: ${error.msg.message.join()}`);
-      if (error.msg.username) alert.error(`Username: ${error.msg.username.join()}`);
-      if (error.msg.password) alert.error(`Password: ${error.msg.password.join()}`);
+      for (let [k, v] of Object.entries(error.msg)) {
+        alert.error(`${k}: ${v}`);
+        console.log(`${k}: ${v}`);
+      }
     }
     if (message !== previousProps.message) {
       if (message.routineDelete) alert.success(message.routineDelete);
