@@ -15,8 +15,12 @@ export class Alerts extends Component {
     const { error, alert, message } = this.props;
     if (error !== previousProps.error) {
       for (let [k, v] of Object.entries(error.msg)) {
-        alert.error(`${k}: ${v}`);
-        console.log(`${k}: ${v}`);
+        if (v != "Invalid token.") {
+          alert.error(`${k}: ${v}`);
+          console.log(`${k}: ${v}`);
+        } else {
+          console.log("Invalid token message blocked.");
+        }
       }
     }
     if (message !== previousProps.message) {
