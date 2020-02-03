@@ -3,7 +3,10 @@ import { connect } from "react-redux";
 import moment from "moment";
 import styled from "styled-components";
 import { formatTime, totalTime } from "../../utils/SharedFunctions";
-import { Container, Row, Col, Button } from "react-bootstrap";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import Button from "react-bootstrap/Button";
 import PropTypes from "prop-types";
 import { toggleTimer, updateRoutine } from "../../actions/routines";
 
@@ -92,9 +95,12 @@ export class TimeDisplay extends Component {
     clearInterval(this.state.timerInstance);
     this.props.toggleTimer(false);
 
+    const newOrderString = this.props.segments.map(seg => seg.id).toString();
+
     await this.props.updateRoutine({
       ...this.props.current_routine,
-      plays: this.props.current_routine.plays + this.state.currentPlays
+      plays: this.props.current_routine.plays + this.state.currentPlays,
+      order: newOrderString
     });
   }
 
@@ -324,7 +330,7 @@ export class TimeDisplay extends Component {
                   this.mainTimeDisplay = dt;
                 }}
               >
-                00:00:00:00
+                00:00:00.00
               </MainDisplay>
             </Col>
           </Row>
@@ -342,7 +348,8 @@ export class TimeDisplay extends Component {
           <Row>
             <Col>
               <Button
-                variant={this.state.disableControlButtons ? "secondary" : "info"}
+                variant={"info"}
+                disabled={this.state.timerIndex == 0 || this.state.disableControlButtons}
                 style={{ margin: 4 }}
                 onClick={() => {
                   this.previousClick();
@@ -351,7 +358,8 @@ export class TimeDisplay extends Component {
                 {" << "}
               </Button>
               <Button
-                variant={this.state.disableControlButtons ? "secondary" : "primary"}
+                variant={"primary"}
+                disabled={this.state.disableControlButtons}
                 style={{ margin: 4 }}
                 onClick={() => {
                   this.startStopClick();
@@ -371,7 +379,11 @@ export class TimeDisplay extends Component {
                 Reset
               </Button>
               <Button
-                variant={this.state.disableControlButtons ? "secondary" : "info"}
+                variant={"info"}
+                disabled={
+                  this.state.timerIndex == this.props.segments.length - 1 ||
+                  this.state.disableControlButtons
+                }
                 style={{ margin: 4 }}
                 onClick={() => {
                   this.nextClick();

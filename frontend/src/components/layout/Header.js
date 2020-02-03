@@ -2,7 +2,10 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { logout } from "../../actions/auth";
-import { Container, Navbar, Nav, Button } from "react-bootstrap";
+import Container from "react-bootstrap/Container";
+import Navbar from "react-bootstrap/Navbar";
+import Nav from "react-bootstrap/Nav";
+import Button from "react-bootstrap/Button";
 
 // Navbar with navigation links
 export class Header extends Component {
@@ -38,7 +41,7 @@ export class Header extends Component {
 
     return (
       <Navbar bg="light" expand="sm">
-        <Container>
+        <Container fluid={true}>
           <Navbar.Brand href="#">TT9B</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">

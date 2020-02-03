@@ -4,9 +4,12 @@ import Splits from "./Splits";
 import styled from "styled-components";
 import { setSplit, clearSplits } from "../../actions/stopwatch";
 import { formatTime } from "../../utils/SharedFunctions";
-import { Container, Row, Col, Button } from "react-bootstrap";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import Button from "react-bootstrap/Button";
 
 const MainDisplay = styled.div`
   font-size: 8em;

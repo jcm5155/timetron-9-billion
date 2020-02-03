@@ -31,8 +31,8 @@ export default function(state = initialState, action) {
         ...state,
         current_routine: action.payload,
         routines: [
-          ...state.routines.filter(routine => routine.id !== action.payload.id),
-          action.payload
+          action.payload,
+          ...state.routines.filter(routine => routine.id !== action.payload.id)
         ]
       };
     case ADD_ROUTINE:

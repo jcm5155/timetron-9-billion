@@ -1,7 +1,9 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { updateRoutine } from "../../actions/routines";
+import { updateRoutine } from "../../../actions/routines";
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
 
 // Form for updating the name of an existing routine
 export class UpdateRoutineForm extends Component {
@@ -32,15 +34,13 @@ export class UpdateRoutineForm extends Component {
     });
   };
 
-  // TODO: Update styling to use react-bootstrap
   render() {
     const { name } = this.state.name;
     return (
-      <div className="card card-body mt-4 mb-4">
-        <h2>Update {this.props.current_routine.name}</h2>
-        <form onSubmit={this.onSubmit}>
-          <div className="form-group">
-            <label>Name</label>
+      <Fragment>
+        <Form onSubmit={this.onSubmit}>
+          <Form.Group>
+            <Form.Label>Name</Form.Label>
             <input
               className="form-control"
               type="text"
@@ -49,14 +49,14 @@ export class UpdateRoutineForm extends Component {
               value={name}
               placeholder={this.props.current_routine.name}
             />
-          </div>
-          <div className="form-group">
-            <button type="submit" className="btn btn-primary">
+          </Form.Group>
+          <Form.Group>
+            <Button type="submit" variant="primary" block>
               Update
-            </button>
-          </div>
-        </form>
-      </div>
+            </Button>
+          </Form.Group>
+        </Form>
+      </Fragment>
     );
   }
 }

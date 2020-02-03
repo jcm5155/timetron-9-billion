@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 import { formatTime } from "../../utils/SharedFunctions";
 import { connect } from "react-redux";
-import { Table, Col } from "react-bootstrap";
 import PropTypes from "prop-types";
 import moment from "moment";
+import Table from "react-bootstrap/Table";
+import Col from "react-bootstrap/Col";
 
 // Displays the lap splits for the stopwatch
 export class Splits extends Component {

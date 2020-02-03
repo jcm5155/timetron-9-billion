@@ -1,5 +1,8 @@
 import { connect } from "react-redux";
-import { Container, Row } from "react-bootstrap";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Table from "react-bootstrap/Table";
+import Button from "react-bootstrap/Button";
 import { getSegments } from "../../actions/segments";
 import React, { Component, Fragment } from "react";
 import { Redirect } from "react-router-dom";
@@ -67,16 +70,15 @@ export class Routines extends Component {
     }
     return (
       <Container>
-        <Row className="justify-content-md-center">
+        <Row className="justify-content-center">
           <h2 className="p-2"> {this.props.auth.user.username}'s Routines</h2>
         </Row>
-        <table className="table table-striped">
+        <Table striped responsive>
           <thead>
             <tr>
               <th>Name</th>
-              <th>Total Time</th>
+              <th>Segments</th>
               <th>Plays</th>
-              <th></th>
               <th></th>
             </tr>
           </thead>
@@ -84,35 +86,36 @@ export class Routines extends Component {
             {this.props.routines.map(routine => (
               <tr key={routine.id}>
                 <td>{routine.name}</td>
-                <td>NYI</td>
+                <td>{routine.order == "" ? "0" : routine.order.split(",").length}</td>
                 <td>{routine.plays}</td>
                 <td>
-                  <button
+                  <Button
                     onClick={() => {
                       this.onSelectClick(routine.id);
                     }}
                     ref={bt => {
                       this.selectButt = bt;
                     }}
-                    className="btn btn-secondary btn-sm"
+                    variant={"success"}
+                    size={"sm"}
                   >
                     Select
-                  </button>
-                </td>
-                <td>
-                  <button
+                  </Button>
+                  {"  "}
+                  <Button
                     onClick={() => {
                       this.props.deleteRoutine(routine.id);
                     }}
-                    className="btn btn-danger btn-sm"
+                    variant={"danger"}
+                    size={"sm"}
                   >
                     Delete
-                  </button>
+                  </Button>
                 </td>
               </tr>
             ))}
           </tbody>
-        </table>
+        </Table>
       </Container>
     );
   }

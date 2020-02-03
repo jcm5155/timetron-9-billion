@@ -1,9 +1,11 @@
 import React, { Fragment } from "react";
 import TimeDisplay from "./TimeDisplay";
 import Segments from "./segments/Segments";
-import ModalForms from "./ModalForms";
+import ModalForms from "./forms/ModalForms";
 
-import { Container, Row, Col } from "react-bootstrap";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 
 // Layout for "/routine"
 function Dashboard(props) {

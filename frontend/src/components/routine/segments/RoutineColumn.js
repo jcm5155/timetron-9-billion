@@ -7,13 +7,7 @@ import SegmentRow from "./SegmentRow";
 const SegmentContainer = styled.div`
   padding: 3px;
   height: 60vh;
-  overflow: scroll;
-  -webkit-transition: height 0.3s;
-  transition: height 0.3s;
-
-  &:hover {
-    height: 70vh;
-  }
+  overflow: auto;
 `;
 
 const SegmentList = styled.div`
