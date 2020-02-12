@@ -90,7 +90,7 @@ export class Routines extends Component {
               <tr key={routine.id}>
                 <td>{routine.name}</td>
                 <td>{routine.plays}</td>
-                <td>{routine.order == "" ? "0" : routine.order.split(",").length}</td>
+                <td>{routine.order == ("" || ",") ? 0 : routine.order.split(",").length}</td>
                 <td>
                   {routine.total_duration == 0
                     ? "0s"
